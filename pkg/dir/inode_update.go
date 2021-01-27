@@ -20,7 +20,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 func (d *Directory) UpdateDirectory(dirInode *DirInode) ([]byte, error) {
@@ -35,11 +35,11 @@ func (d *Directory) UpdateDirectory(dirInode *DirInode) ([]byte, error) {
 		return nil, err
 	}
 
-	curDir := path + utils.PathSeperator + dirName
-	if path == utils.PathSeperator {
+	curDir := path + common.PathSeperator + dirName
+	if path == common.PathSeperator {
 		curDir = path + dirName
 	}
-	topic := utils.HashString(curDir)
+	topic := common.HashString(curDir)
 	_, err = d.getFeed().UpdateFeed(topic, d.getAccount().GetAddress(), data)
 	if err != nil {
 		return nil, err

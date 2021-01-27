@@ -20,14 +20,14 @@ import (
 	"strings"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	d "github.com/fairdatasociety/fairOS-dfs/pkg/dir"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (p *Pod) isPodOpened(podName string) bool {
 	p.podMu.Lock()
 	defer p.podMu.Unlock()
-	name1 := utils.PathSeperator + podName
+	name1 := common.PathSeperator + podName
 	if podInfo, ok := p.podMap[name1]; ok {
 		if podInfo.currentPodInode != nil {
 			return true
@@ -62,7 +62,7 @@ func CleanPodName(podName string) (string, error) {
 	if podName == "" {
 		return "", ErrInvalidPodName
 	}
-	if len(podName) > utils.MaxPodNameLength {
+	if len(podName) > common.MaxPodNameLength {
 		return "", ErrTooLongPodName
 	}
 	podName = strings.TrimSpace(podName)
@@ -76,15 +76,15 @@ func CleanDirName(dirName string) ([]string, error) {
 	}
 
 	var cleanedDirs []string
-	if dirName == utils.PathSeperator {
+	if dirName == common.PathSeperator {
 		cleanedDirs = append(cleanedDirs, dirName)
 		return cleanedDirs, nil
 	}
 
-	dirs := strings.Split(dirName, utils.PathSeperator)
+	dirs := strings.Split(dirName, common.PathSeperator)
 
 	for _, dir := range dirs {
-		if len(dir) > utils.MaxDirectoryNameLength {
+		if len(dir) > common.MaxDirectoryNameLength {
 			return nil, ErrTooLongDirectoryName
 		}
 		dir = strings.TrimSpace(dir)

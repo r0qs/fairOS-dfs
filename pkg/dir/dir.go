@@ -22,11 +22,11 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	f "github.com/fairdatasociety/fairOS-dfs/pkg/file"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
 	m "github.com/fairdatasociety/fairOS-dfs/pkg/meta"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -78,7 +78,7 @@ func (d *Directory) AddToDirectoryMap(path string, dirInode *DirInode) {
 	d.dirMu.Lock()
 	defer d.dirMu.Unlock()
 	if !strings.HasPrefix(path, "/") {
-		path = utils.PathSeperator + path
+		path = common.PathSeperator + path
 	}
 	d.dirMap[path] = dirInode
 }
@@ -87,7 +87,7 @@ func (d *Directory) RemoveFromDirectoryMap(path string) {
 	d.dirMu.Lock()
 	defer d.dirMu.Unlock()
 	if !strings.HasPrefix(path, "/") {
-		path = utils.PathSeperator + path
+		path = common.PathSeperator + path
 	}
 	delete(d.dirMap, path)
 }
@@ -96,7 +96,7 @@ func (d *Directory) GetDirFromDirectoryMap(path string) *DirInode {
 	d.dirMu.Lock()
 	defer d.dirMu.Unlock()
 	if !strings.HasPrefix(path, "/") {
-		path = utils.PathSeperator + path
+		path = common.PathSeperator + path
 	}
 	for k := range d.dirMap {
 		if k == path {

@@ -24,11 +24,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 func (f *File) CopyToFile(podFile string, localDir string) error {
-	//TODO: need to change the access time for podFile
+	// TODO: need to change the access time for podFile
 
 	base := filepath.Base(podFile)
 	meta := f.GetFromFileMap(podFile)
@@ -46,7 +46,7 @@ func (f *File) CopyToFile(podFile string, localDir string) error {
 		return err
 	}
 
-	outFile, err := os.Create(localDir + utils.PathSeperator + base)
+	outFile, err := os.Create(localDir + common.PathSeperator + base)
 	if err != nil {
 		return err
 	}

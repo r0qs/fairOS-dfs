@@ -28,9 +28,9 @@ import (
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore/bee/mock"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/collection"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func TestIndex(t *testing.T) {
@@ -65,7 +65,7 @@ func TestIndex(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		//Open the index
+		// Open the index
 		_, err = collection.OpenIndex("testdb_index_1", "key", fd, ai, user, mockClient, logger)
 		if err != nil {
 			t.Fatal(err)
@@ -112,7 +112,7 @@ func TestIndex(t *testing.T) {
 	})
 
 	t.Run("open_index_without_creating_it", func(t *testing.T) {
-		//Open the index
+		// Open the index
 		_, err = collection.OpenIndex("testdb_index_4", "key", fd, ai, user, mockClient, logger)
 		if err != collection.ErrIndexNotPresent {
 			t.Fatal(err)
@@ -126,7 +126,7 @@ func TestIndex(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		//Open the index
+		// Open the index
 		idx, err := collection.OpenIndex("testdb_index_5", "key", fd, ai, user, mockClient, logger)
 		if err != nil {
 			t.Fatal(err)
@@ -188,14 +188,12 @@ func TestIndex(t *testing.T) {
 		if count != actualCount {
 			t.Fatalf("invalid count in index, expected %d got %d", actualCount, count)
 		}
-
 	})
-
 }
 
-func isIndexPresent(t *testing.T, collectionName, indexName string, fd *feed.API, user utils.Address, client blockstore.Client) bool {
+func isIndexPresent(t *testing.T, collectionName, indexName string, fd *feed.API, user common.Address, client blockstore.Client) bool {
 	actualIndexName := collectionName + indexName
-	topic := utils.HashString(actualIndexName)
+	topic := common.HashString(actualIndexName)
 	_, addr, err := fd.GetFeedData(topic, user)
 	if err == nil && len(addr) != 0 {
 		data, _, err := client.DownloadBlob(addr)

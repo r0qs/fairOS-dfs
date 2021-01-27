@@ -22,9 +22,9 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore/bee/mock"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func TestPod_RemoveDir(t *testing.T) {
@@ -57,7 +57,7 @@ func TestPod_RemoveDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("error creating directory %s", firstDir)
 		}
-		dirPath := utils.PathSeperator + podName1 + utils.PathSeperator + firstDir
+		dirPath := common.PathSeperator + podName1 + common.PathSeperator + firstDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
@@ -67,7 +67,7 @@ func TestPod_RemoveDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("error removing directory")
 		}
-		dirPath = utils.PathSeperator + podName1 + utils.PathSeperator + firstDir
+		dirPath = common.PathSeperator + podName1 + common.PathSeperator + firstDir
 		dirInode = info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode != nil {
 			t.Fatalf("directory not removed")
@@ -98,7 +98,7 @@ func TestPod_RemoveDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("error creating directory %s", secondDir)
 		}
-		dirPath := utils.PathSeperator + podName2 + utils.PathSeperator + firstDir + utils.PathSeperator + secondDir
+		dirPath := common.PathSeperator + podName2 + common.PathSeperator + firstDir + common.PathSeperator + secondDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
@@ -108,7 +108,7 @@ func TestPod_RemoveDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("error removing directory")
 		}
-		dirPath = utils.PathSeperator + podName2 + utils.PathSeperator + firstDir + utils.PathSeperator + secondDir
+		dirPath = common.PathSeperator + podName2 + common.PathSeperator + firstDir + common.PathSeperator + secondDir
 		dirInode = info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode != nil {
 			t.Fatalf("directory not removed")
@@ -131,17 +131,17 @@ func TestPod_RemoveDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("error creating directory %s", err)
 		}
-		err = pod1.MakeDir(podName3, firstDir+utils.PathSeperator+secondDir)
+		err = pod1.MakeDir(podName3, firstDir+common.PathSeperator+secondDir)
 		if err != nil {
 			t.Fatalf("error creating directory %s", err)
 		}
-		dirPath := utils.PathSeperator + podName3 + utils.PathSeperator + firstDir + utils.PathSeperator + secondDir
+		dirPath := common.PathSeperator + podName3 + common.PathSeperator + firstDir + common.PathSeperator + secondDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
 		}
 
-		err = pod1.RemoveDir(podName3, firstDir+utils.PathSeperator+secondDir)
+		err = pod1.RemoveDir(podName3, firstDir+common.PathSeperator+secondDir)
 		if err != nil {
 			t.Fatalf("error removing directory")
 		}
@@ -150,7 +150,7 @@ func TestPod_RemoveDir(t *testing.T) {
 			t.Fatalf("directory not removed")
 		}
 
-		dirPath = utils.PathSeperator + podName3 + utils.PathSeperator + firstDir
+		dirPath = common.PathSeperator + podName3 + common.PathSeperator + firstDir
 		dirInode = info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory deleted")
@@ -175,13 +175,13 @@ func TestPod_RemoveDir(t *testing.T) {
 		}
 
 		// check /test/dir3
-		dirPath := utils.PathSeperator + podName4 + utils.PathSeperator + "dir3"
+		dirPath := common.PathSeperator + podName4 + common.PathSeperator + "dir3"
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
 		}
 		// check /test/dir3/dir4
-		dirPath = utils.PathSeperator + podName4 + utils.PathSeperator + thirdAndFourthDir
+		dirPath = common.PathSeperator + podName4 + common.PathSeperator + thirdAndFourthDir
 		dirInode = info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
@@ -191,12 +191,12 @@ func TestPod_RemoveDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("error removing directory")
 		}
-		dirPath = utils.PathSeperator + podName4 + utils.PathSeperator + "dir3"
+		dirPath = common.PathSeperator + podName4 + common.PathSeperator + "dir3"
 		dirInode = info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode != nil {
 			t.Fatalf("directory not removed")
 		}
-		dirPath = utils.PathSeperator + podName4 + utils.PathSeperator + thirdAndFourthDir
+		dirPath = common.PathSeperator + podName4 + common.PathSeperator + thirdAndFourthDir
 		dirInode = info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode != nil {
 			t.Fatalf("directory not removed")
@@ -219,7 +219,7 @@ func TestPod_RemoveDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("error creating directory %s", fifthDir)
 		}
-		dirPath := utils.PathSeperator + podName5 + fifthDir
+		dirPath := common.PathSeperator + podName5 + fifthDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
@@ -229,7 +229,7 @@ func TestPod_RemoveDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("error removing directory")
 		}
-		dirPath = utils.PathSeperator + podName5 + fifthDir
+		dirPath = common.PathSeperator + podName5 + fifthDir
 		dirInode = info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode != nil {
 			t.Fatalf("directory not deleted")

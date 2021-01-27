@@ -19,11 +19,11 @@ package dfs
 import (
 	"io"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/dir"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/file"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/pod"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/user"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (d *DfsAPI) Mkdir(directoryName, sessionId string) error {
@@ -285,7 +285,7 @@ func (d *DfsAPI) ShareFile(podFile, destinationUser, sessionId string) (string, 
 	return sharingRef, nil
 }
 
-func (d *DfsAPI) ReceiveFile(sessionId string, sharingRef utils.SharingReference, dir string) (string, string, error) {
+func (d *DfsAPI) ReceiveFile(sessionId string, sharingRef common.SharingReference, dir string) (string, string, error) {
 	// get the logged in user information
 	ui := d.users.GetLoggedInUserInfo(sessionId)
 	if ui == nil {
@@ -300,7 +300,7 @@ func (d *DfsAPI) ReceiveFile(sessionId string, sharingRef utils.SharingReference
 	return d.users.ReceiveFileFromUser(ui.GetPodName(), sharingRef, ui, ui.GetPod(), dir)
 }
 
-func (d *DfsAPI) ReceiveInfo(sessionId string, sharingRef utils.SharingReference) (*user.ReceiveFileInfo, error) {
+func (d *DfsAPI) ReceiveInfo(sessionId string, sharingRef common.SharingReference) (*user.ReceiveFileInfo, error) {
 	// get the logged in user information
 	ui := d.users.GetLoggedInUserInfo(sessionId)
 	if ui == nil {

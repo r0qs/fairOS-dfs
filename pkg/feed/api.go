@@ -28,9 +28,9 @@ import (
 	bmtlegacy "github.com/ethersphere/bmt/legacy"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed/lookup"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -43,7 +43,7 @@ var (
 	ErrInvalidTopicSize = fmt.Errorf("Topic is not equal to %d", TopicLength)
 
 	// ErrInvalidPayloadSize is returned when the payload is greater than the chunk size
-	ErrInvalidPayloadSize = fmt.Errorf("payload is greater than %d", utils.MaxChunkLength)
+	ErrInvalidPayloadSize = fmt.Errorf("payload is greater than %d", common.MaxChunkLength)
 
 	ErrReadOnlyFeed = fmt.Errorf("read only feed")
 )
@@ -56,7 +56,7 @@ type API struct {
 
 type Request struct {
 	ID
-	//User   utils.Address
+	// User   common.Address
 	idAddr swarm.Address // cached chunk address for the update (not serialized, for internal use)
 
 	data       []byte     // actual data payload
@@ -74,7 +74,7 @@ func New(accountInfo *account.Info, client blockstore.Client, logger logging.Log
 }
 
 // create feed
-func (a *API) CreateFeed(topic []byte, user utils.Address, data []byte) ([]byte, error) {
+func (a *API) CreateFeed(topic []byte, user common.Address, data []byte) ([]byte, error) {
 	var req Request
 
 	if a.accountInfo.GetPrivateKey() == nil {
@@ -85,7 +85,7 @@ func (a *API) CreateFeed(topic []byte, user utils.Address, data []byte) ([]byte,
 		return nil, ErrInvalidTopicSize
 	}
 
-	if len(data) > utils.MaxChunkLength {
+	if len(data) > common.MaxChunkLength {
 		return nil, ErrInvalidPayloadSize
 	}
 
@@ -139,7 +139,7 @@ func (a *API) CreateFeed(topic []byte, user utils.Address, data []byte) ([]byte,
 	return address, nil
 }
 
-func (a *API) GetFeedData(topic []byte, user utils.Address) ([]byte, []byte, error) {
+func (a *API) GetFeedData(topic []byte, user common.Address) ([]byte, []byte, error) {
 	if len(topic) != TopicLength {
 		return nil, nil, ErrInvalidTopicSize
 	}
@@ -163,10 +163,9 @@ func (a *API) GetFeedData(topic []byte, user utils.Address) ([]byte, []byte, err
 		return nil, nil, err
 	}
 	return addr.Bytes(), data, nil
-
 }
 
-func (a *API) UpdateFeed(topic []byte, user utils.Address, data []byte) ([]byte, error) {
+func (a *API) UpdateFeed(topic []byte, user common.Address, data []byte) ([]byte, error) {
 	if a.accountInfo.GetPrivateKey() == nil {
 		return nil, ErrReadOnlyFeed
 	}
@@ -175,7 +174,7 @@ func (a *API) UpdateFeed(topic []byte, user utils.Address, data []byte) ([]byte,
 		return nil, ErrInvalidTopicSize
 	}
 
-	if len(data) > utils.MaxChunkLength {
+	if len(data) > common.MaxChunkLength {
 		return nil, ErrInvalidPayloadSize
 	}
 
@@ -244,7 +243,7 @@ func (a *API) UpdateFeed(topic []byte, user utils.Address, data []byte) ([]byte,
 	return address, nil
 }
 
-func (a *API) DeleteFeed(topic []byte, user utils.Address) error {
+func (a *API) DeleteFeed(topic []byte, user common.Address) error {
 	if a.accountInfo.GetPrivateKey() == nil {
 		return ErrReadOnlyFeed
 	}

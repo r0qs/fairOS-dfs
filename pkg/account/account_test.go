@@ -22,8 +22,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func TestAccount_CreateRootAccount(t *testing.T) {
@@ -54,7 +54,7 @@ func TestAccount_CreateRootAccount(t *testing.T) {
 		t.Fatal("mnemonic is not 12 words")
 	}
 
-	if acc.userAcount.GetPrivateKey() == nil || acc.userAcount.GetPublicKey() == nil || len(acc.userAcount.address[:]) != utils.AddressLength {
+	if acc.userAcount.GetPrivateKey() == nil || acc.userAcount.GetPublicKey() == nil || len(acc.userAcount.address[:]) != common.AddressLength {
 		t.Fatalf("keys not intialised")
 	}
 

@@ -25,8 +25,8 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore/bee/mock"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func TestFeed(t *testing.T) {
@@ -43,7 +43,7 @@ func TestFeed(t *testing.T) {
 
 	t.Run("create-feed", func(t *testing.T) {
 		fd := New(accountInfo1, client, logger)
-		topic := utils.HashString("topic1")
+		topic := common.HashString("topic1")
 		data := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 		addr, err := fd.CreateFeed(topic, user1, data)
 		if err != nil {
@@ -74,7 +74,7 @@ func TestFeed(t *testing.T) {
 
 		// create feed from user1
 		fd1 := New(accountInfo1, client, logger)
-		topic := utils.HashString("topic1")
+		topic := common.HashString("topic1")
 		data := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 		addr, err := fd1.CreateFeed(topic, user1, data)
 		if err != nil {
@@ -97,7 +97,7 @@ func TestFeed(t *testing.T) {
 
 	t.Run("read-feed-first-time", func(t *testing.T) {
 		fd := New(accountInfo1, client, logger)
-		topic := utils.HashString("topic2")
+		topic := common.HashString("topic2")
 
 		// check if the data and address is present and is same as stored
 		_, _, err := fd.GetFeedData(topic, user1)
@@ -108,7 +108,7 @@ func TestFeed(t *testing.T) {
 
 	t.Run("update-feed", func(t *testing.T) {
 		fd := New(accountInfo1, client, logger)
-		topic := utils.HashString("topic3")
+		topic := common.HashString("topic3")
 		data := []byte{0}
 		_, err = fd.CreateFeed(topic, user1, data)
 		if err != nil {

@@ -19,11 +19,10 @@ package pod
 import (
 	"fmt"
 
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 func (p *Pod) Cat(podName string, fileName string) error {
-
 	if !p.isPodOpened(podName) {
 		return fmt.Errorf("login to pod to do this operation")
 	}
@@ -37,7 +36,7 @@ func (p *Pod) Cat(podName string, fileName string) error {
 	if podInfo.IsCurrentDirRoot() {
 		fname = podInfo.GetCurrentPodPathAndName() + fileName
 	} else {
-		fname = podInfo.GetCurrentDirPathAndName() + utils.PathSeperator + fileName
+		fname = podInfo.GetCurrentDirPathAndName() + common.PathSeperator + fileName
 	}
 
 	return podInfo.getFile().Cat(fname)

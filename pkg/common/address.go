@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package utils
+package common
 
 import (
 	"encoding/hex"
@@ -33,9 +33,11 @@ func NewAddress(b []byte) Address {
 	a.SetBytes(b)
 	return a
 }
+
 func (a *Address) String() string {
 	return hex.EncodeToString(a[:])
 }
+
 func (a *Address) ParseAddress(s string) (Address, error) {
 	b, err := hex.DecodeString(s)
 	if err != nil {
@@ -108,6 +110,7 @@ func FromHex(s string) []byte {
 	}
 	return Hex2Bytes(s)
 }
+
 func Hex2Bytes(str string) []byte {
 	h, _ := hex.DecodeString(str)
 	return h

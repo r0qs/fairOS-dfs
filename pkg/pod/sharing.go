@@ -23,7 +23,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 type ShareInfo struct {
@@ -47,7 +47,7 @@ func (p *Pod) GetMetaReferenceOfFile(podName, filePath string) ([]byte, string, 
 	podDir := filepath.Dir(filePath)
 	fileName := filepath.Base(filePath)
 	path := p.getFilePath(podDir, podInfo)
-	fpath := path + utils.PathSeperator + fileName
+	fpath := path + common.PathSeperator + fileName
 
 	return podInfo.getFile().GetFileReference(fpath)
 }
@@ -71,13 +71,13 @@ func (p *Pod) ReceiveFileAndStore(podName, podDir, fileName, metaHexRef string) 
 	}
 
 	// check if the file exists already
-	fpath := path + utils.PathSeperator + fileName
+	fpath := path + common.PathSeperator + fileName
 	if podInfo.file.IsFileAlreadyPResent(fpath) {
 		return fmt.Errorf("file already present in the destination dir")
 	}
 
 	// append the file meta to the parent directory and update the directory feed
-	metaReference, err := utils.ParseHexReference(metaHexRef)
+	metaReference, err := common.ParseHexReference(metaHexRef)
 	if err != nil {
 		return err
 	}
@@ -145,11 +145,11 @@ func (p *Pod) PodShare(podName, passPhrase, userName string) (string, error) {
 		return "", err
 	}
 
-	shareInfoRef := utils.NewReference(ref)
+	shareInfoRef := common.NewReference(ref)
 	return shareInfoRef.String(), nil
 }
 
-func (p *Pod) ReceivePodInfo(ref utils.Reference) (*ShareInfo, error) {
+func (p *Pod) ReceivePodInfo(ref common.Reference) (*ShareInfo, error) {
 	data, resp, err := p.client.DownloadBlob(ref.Bytes())
 	if err != nil {
 		return nil, err
@@ -166,10 +166,9 @@ func (p *Pod) ReceivePodInfo(ref utils.Reference) (*ShareInfo, error) {
 	}
 
 	return &shareInfo, nil
-
 }
 
-func (p *Pod) ReceivePod(ref utils.Reference) (*Info, error) {
+func (p *Pod) ReceivePod(ref common.Reference) (*Info, error) {
 	data, resp, err := p.client.DownloadBlob(ref.Bytes())
 	if err != nil {
 		return nil, err

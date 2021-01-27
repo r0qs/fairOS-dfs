@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/cookie"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/dfs"
 	p "github.com/fairdatasociety/fairOS-dfs/pkg/pod"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 	"resenje.org/jsonhttp"
 )
 
@@ -100,7 +100,7 @@ func (h *Handler) PodReceiveInfoHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	ref, err := utils.ParseHexReference(sharingRefString)
+	ref, err := common.ParseHexReference(sharingRefString)
 	if err != nil {
 		h.logger.Errorf("pod receive info: invalid reference: ", err)
 		jsonhttp.BadRequest(w, "pod receive info: invalid reference:"+err.Error())
@@ -139,7 +139,7 @@ func (h *Handler) PodReceiveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ref, err := utils.ParseHexReference(sharingRefString)
+	ref, err := common.ParseHexReference(sharingRefString)
 	if err != nil {
 		h.logger.Errorf("pod receive: invalid reference: ", err)
 		jsonhttp.BadRequest(w, "pod receive: invalid reference:"+err.Error())

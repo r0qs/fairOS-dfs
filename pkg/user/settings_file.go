@@ -20,8 +20,8 @@ import (
 	"encoding/json"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -150,8 +150,8 @@ func (u *Users) GetAvatar(userInfo *Info) ([]byte, error) {
 	return getFeedData(avatarFeedName, rootReference, userInfo.GetFeed())
 }
 
-func getFeedData(fileName string, rootReference utils.Address, fd *feed.API) ([]byte, error) {
-	topic := utils.HashString(fileName)
+func getFeedData(fileName string, rootReference common.Address, fd *feed.API) ([]byte, error) {
+	topic := common.HashString(fileName)
 	_, data, err := fd.GetFeedData(topic, rootReference)
 	if err != nil {
 		return nil, err
@@ -159,8 +159,8 @@ func getFeedData(fileName string, rootReference utils.Address, fd *feed.API) ([]
 	return data, nil
 }
 
-func putFeedData(fileName string, rootReference utils.Address, data []byte, fd *feed.API) error {
-	topic := utils.HashString(fileName)
+func putFeedData(fileName string, rootReference common.Address, data []byte, fd *feed.API) error {
+	topic := common.HashString(fileName)
 	_, err := fd.UpdateFeed(topic, rootReference, data)
 	if err != nil {
 		return err

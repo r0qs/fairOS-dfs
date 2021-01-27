@@ -24,9 +24,9 @@ import (
 	"time"
 
 	"github.com/ethersphere/bee/pkg/swarm"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/file"
 	m "github.com/fairdatasociety/fairOS-dfs/pkg/meta"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (p *Pod) RemoveFile(podName, podFile string) error {
@@ -49,7 +49,7 @@ func (p *Pod) RemoveFile(podName, podFile string) error {
 	if podInfo.IsCurrentDirRoot() {
 		path = podInfo.GetCurrentPodPathAndName() + podFile
 	} else {
-		path = podInfo.GetCurrentDirPathAndName() + utils.PathSeperator + podFile
+		path = podInfo.GetCurrentDirPathAndName() + common.PathSeperator + podFile
 	}
 
 	if !podInfo.getFile().IsFileAlreadyPResent(path) {
@@ -128,5 +128,4 @@ func (p *Pod) RemoveFile(podName, podFile string) error {
 		}
 	}
 	return nil
-
 }

@@ -26,9 +26,9 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore/bee/mock"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func TestPod_CopyToLocal(t *testing.T) {
@@ -56,7 +56,7 @@ func TestPod_CopyToLocal(t *testing.T) {
 			t.Fatalf("error copying file to local dir %s", err.Error())
 		}
 
-		fileInfo, err := os.Stat(os.TempDir() + utils.PathSeperator + filepath.Base(podFile))
+		fileInfo, err := os.Stat(os.TempDir() + common.PathSeperator + filepath.Base(podFile))
 		if err != nil {
 			t.Fatalf("file not copied to local")
 		}
@@ -81,7 +81,7 @@ func TestPod_CopyToLocal(t *testing.T) {
 		if err != nil {
 			t.Fatalf("error creating directory %s", firstDir)
 		}
-		dirPath := utils.PathSeperator + podName1 + utils.PathSeperator + firstDir
+		dirPath := common.PathSeperator + podName1 + common.PathSeperator + firstDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
@@ -93,7 +93,7 @@ func TestPod_CopyToLocal(t *testing.T) {
 			t.Fatalf("error copying file to local dir %s", err.Error())
 		}
 
-		fileInfo, err := os.Stat(os.TempDir() + utils.PathSeperator + filepath.Base(podFile))
+		fileInfo, err := os.Stat(os.TempDir() + common.PathSeperator + filepath.Base(podFile))
 		if err != nil {
 			t.Fatalf("file not copied to local")
 		}
@@ -124,7 +124,7 @@ func TestPod_CopyToLocal(t *testing.T) {
 			t.Fatalf("error copying file to local dir %s", err.Error())
 		}
 
-		fileInfo, err := os.Stat(pwd + utils.PathSeperator + filepath.Base(podFile))
+		fileInfo, err := os.Stat(pwd + common.PathSeperator + filepath.Base(podFile))
 		if err != nil {
 			t.Fatalf("file not copied to local")
 		}
@@ -142,7 +142,6 @@ func TestPod_CopyToLocal(t *testing.T) {
 			t.Fatalf("could not delete pod")
 		}
 	})
-
 }
 
 func createRandomFileInPod(t *testing.T, size int, pod1 *Pod, podName, podDir string) string {
@@ -166,7 +165,7 @@ func createRandomFileInPod(t *testing.T, size int, pod1 *Pod, podName, podDir st
 	}
 
 	fn := file.Name()
-	podDir = strings.TrimPrefix(podDir, utils.PathSeperator+podName)
+	podDir = strings.TrimPrefix(podDir, common.PathSeperator+podName)
 	if podDir == "" {
 		podDir = "."
 	}
@@ -193,7 +192,7 @@ func createRandomFileInPod(t *testing.T, size int, pod1 *Pod, podName, podDir st
 	if podDir == "." {
 		podDir = ""
 	}
-	fileName := podDir + utils.PathSeperator + filepath.Base(file.Name())
-	fileName = strings.TrimPrefix(fileName, utils.PathSeperator+podName)
+	fileName := podDir + common.PathSeperator + filepath.Base(file.Name())
+	fileName = strings.TrimPrefix(fileName, common.PathSeperator+podName)
 	return fileName
 }

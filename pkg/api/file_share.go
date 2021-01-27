@@ -21,8 +21,8 @@ import (
 
 	"resenje.org/jsonhttp"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/cookie"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 type ReceiveFileResponse struct {
@@ -102,7 +102,7 @@ func (h *Handler) FileReceiveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sharingRef, err := utils.ParseSharingReference(sharingRefString)
+	sharingRef, err := common.ParseSharingReference(sharingRefString)
 	if err != nil {
 		h.logger.Errorf("file receive: invalid reference: ", err)
 		jsonhttp.BadRequest(w, "file receive: invalid reference:"+err.Error())
@@ -144,7 +144,7 @@ func (h *Handler) FileReceiveInfoHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	sharingRef, err := utils.ParseSharingReference(sharingRefString)
+	sharingRef, err := common.ParseSharingReference(sharingRefString)
 	if err != nil {
 		h.logger.Errorf("file receive info: invalid reference: ", err)
 		jsonhttp.BadRequest(w, "file receive info: invalid reference:"+err.Error())

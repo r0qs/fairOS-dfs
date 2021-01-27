@@ -20,7 +20,7 @@ import (
 	"encoding/json"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 func (u *Users) CreateRootFeeds(userInfo *Info) error {
@@ -36,14 +36,14 @@ func (u *Users) CreateRootFeeds(userInfo *Info) error {
 	return nil
 }
 
-func (u *Users) CreateSettingsFeeds(rootAddress utils.Address, userInfo *Info) error {
+func (u *Users) CreateSettingsFeeds(rootAddress common.Address, userInfo *Info) error {
 	// create name feed
 	name := &Name{}
 	data, err := json.Marshal(&name)
 	if err != nil {
 		return err
 	}
-	topic := utils.HashString(nameFeedName)
+	topic := common.HashString(nameFeedName)
 	_, err = userInfo.GetFeed().CreateFeed(topic, rootAddress, data)
 	if err != nil {
 		return err
@@ -55,14 +55,14 @@ func (u *Users) CreateSettingsFeeds(rootAddress utils.Address, userInfo *Info) e
 	if err != nil {
 		return err
 	}
-	topic = utils.HashString(contactsFeedName)
+	topic = common.HashString(contactsFeedName)
 	_, err = userInfo.GetFeed().CreateFeed(topic, rootAddress, data)
 	if err != nil {
 		return err
 	}
 
 	// create avatar feed
-	topic = utils.HashString(avatarFeedName)
+	topic = common.HashString(avatarFeedName)
 	data = make([]byte, 0)
 	_, err = userInfo.GetFeed().CreateFeed(topic, rootAddress, data)
 	if err != nil {
@@ -72,7 +72,7 @@ func (u *Users) CreateSettingsFeeds(rootAddress utils.Address, userInfo *Info) e
 	return nil
 }
 
-func (u *Users) CreateSharingFeeds(rootAddress utils.Address, userInfo *Info) error {
+func (u *Users) CreateSharingFeeds(rootAddress common.Address, userInfo *Info) error {
 	// create inbox feed data
 	inboxFile := &Inbox{Entries: make([]SharingEntry, 0)}
 	inboxFileBytes, err := json.Marshal(&inboxFile)
@@ -87,7 +87,7 @@ func (u *Users) CreateSharingFeeds(rootAddress utils.Address, userInfo *Info) er
 	}
 
 	// store the inbox reference in to inbox feed
-	topic := utils.HashString(inboxFeedName)
+	topic := common.HashString(inboxFeedName)
 	_, err = userInfo.GetFeed().CreateFeed(topic, rootAddress, newInboxRef)
 	if err != nil {
 		return err
@@ -107,7 +107,7 @@ func (u *Users) CreateSharingFeeds(rootAddress utils.Address, userInfo *Info) er
 	}
 
 	// store the outbox reference in to ourbox feed
-	topic = utils.HashString(outboxFeedName)
+	topic = common.HashString(outboxFeedName)
 	_, err = userInfo.GetFeed().CreateFeed(topic, rootAddress, newOutboxRef)
 	if err != nil {
 		return err

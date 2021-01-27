@@ -24,9 +24,9 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore/bee/mock"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func TestPod_MakeDir(t *testing.T) {
@@ -60,12 +60,12 @@ func TestPod_MakeDir(t *testing.T) {
 			t.Fatalf("error creating directory %s", firstDir)
 		}
 
-		dirPath := utils.PathSeperator + podName1 + utils.PathSeperator + firstDir
+		dirPath := common.PathSeperator + podName1 + common.PathSeperator + firstDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
 		}
-		if dirInode.Meta.Path != utils.PathSeperator+podName1 {
+		if dirInode.Meta.Path != common.PathSeperator+podName1 {
 			t.Fatalf("invalid path in meta")
 		}
 		if dirInode.Meta.Name != firstDir {
@@ -103,12 +103,12 @@ func TestPod_MakeDir(t *testing.T) {
 			t.Fatalf("error creating directory %s", secondDir)
 		}
 
-		dirPath := utils.PathSeperator + podName2 + utils.PathSeperator + firstDir + utils.PathSeperator + secondDir
+		dirPath := common.PathSeperator + podName2 + common.PathSeperator + firstDir + common.PathSeperator + secondDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
 		}
-		if dirInode.Meta.Path != utils.PathSeperator+podName2+utils.PathSeperator+firstDir {
+		if dirInode.Meta.Path != common.PathSeperator+podName2+common.PathSeperator+firstDir {
 			t.Fatalf("invalid path in meta")
 		}
 		if dirInode.Meta.Name != secondDir {
@@ -136,17 +136,17 @@ func TestPod_MakeDir(t *testing.T) {
 			t.Fatalf("error creating directory %s", err)
 		}
 		time.Sleep(1 * time.Second)
-		err = pod1.MakeDir(podName3, firstDir+utils.PathSeperator+secondDir)
+		err = pod1.MakeDir(podName3, firstDir+common.PathSeperator+secondDir)
 		if err != nil {
 			t.Fatalf("error creating directory %s", err)
 		}
 
-		dirPath := utils.PathSeperator + podName3 + utils.PathSeperator + firstDir + utils.PathSeperator + secondDir
+		dirPath := common.PathSeperator + podName3 + common.PathSeperator + firstDir + common.PathSeperator + secondDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
 		}
-		if dirInode.Meta.Path != utils.PathSeperator+podName3+utils.PathSeperator+"dir1" {
+		if dirInode.Meta.Path != common.PathSeperator+podName3+common.PathSeperator+"dir1" {
 			t.Fatalf("invalid path in meta")
 		}
 		if dirInode.Meta.Name != "dir2" {
@@ -175,12 +175,12 @@ func TestPod_MakeDir(t *testing.T) {
 		}
 
 		// check /test/dir3
-		dirPath := utils.PathSeperator + podName4 + utils.PathSeperator + "dir3"
+		dirPath := common.PathSeperator + podName4 + common.PathSeperator + "dir3"
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
 		}
-		if dirInode.Meta.Path != utils.PathSeperator+podName4 {
+		if dirInode.Meta.Path != common.PathSeperator+podName4 {
 			t.Fatalf("invalid path in meta")
 		}
 		if dirInode.Meta.Name != "dir3" {
@@ -191,12 +191,12 @@ func TestPod_MakeDir(t *testing.T) {
 		}
 
 		// check /test/dir3/dir4
-		dirPath = utils.PathSeperator + podName4 + utils.PathSeperator + thirdDir
+		dirPath = common.PathSeperator + podName4 + common.PathSeperator + thirdDir
 		dirInode = info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
 		}
-		if dirInode.Meta.Path != utils.PathSeperator+podName4+utils.PathSeperator+"dir3" {
+		if dirInode.Meta.Path != common.PathSeperator+podName4+common.PathSeperator+"dir3" {
 			t.Fatalf("invalid path in meta")
 		}
 		if dirInode.Meta.Name != "dir4" {
@@ -224,12 +224,12 @@ func TestPod_MakeDir(t *testing.T) {
 			t.Fatalf("error creating directory %s", fourthDir)
 		}
 
-		dirPath := utils.PathSeperator + podName5 + fourthDir
+		dirPath := common.PathSeperator + podName5 + fourthDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
 		}
-		if dirInode.Meta.Path != utils.PathSeperator+podName5 {
+		if dirInode.Meta.Path != common.PathSeperator+podName5 {
 			t.Fatalf("invalid path in meta")
 		}
 		if dirInode.Meta.Name != strings.TrimPrefix(fourthDir, "/") {

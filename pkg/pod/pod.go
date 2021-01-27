@@ -22,11 +22,11 @@ import (
 	"sync"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -61,7 +61,7 @@ func (p *Pod) addPodToPodMap(name string, podInfo *Info) {
 	p.podMu.Lock()
 	defer p.podMu.Unlock()
 	if !strings.HasPrefix(name, "/") {
-		name = utils.PathSeperator + name
+		name = common.PathSeperator + name
 	}
 	p.podMap[name] = podInfo
 }
@@ -70,7 +70,7 @@ func (p *Pod) removePodFromPodMap(name string) {
 	p.podMu.Lock()
 	defer p.podMu.Unlock()
 	if !strings.HasPrefix(name, "/") {
-		name = utils.PathSeperator + name
+		name = common.PathSeperator + name
 	}
 	delete(p.podMap, name)
 }
@@ -79,7 +79,7 @@ func (p *Pod) GetPodInfoFromPodMap(name string) (*Info, error) {
 	p.podMu.Lock()
 	defer p.podMu.Unlock()
 	if !strings.HasPrefix(name, "/") {
-		name = utils.PathSeperator + name
+		name = common.PathSeperator + name
 	}
 	if podInfo, ok := p.podMap[name]; ok {
 		return podInfo, nil

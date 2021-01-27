@@ -25,10 +25,10 @@ import (
 
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	f "github.com/fairdatasociety/fairOS-dfs/pkg/file"
 	m "github.com/fairdatasociety/fairOS-dfs/pkg/meta"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/pod"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -80,7 +80,7 @@ func (u *Users) ShareFileWithUser(podName, podFilePath, destinationRef string, u
 	sharingEntry := SharingEntry{
 		FileName:     fileName,
 		PodName:      userInfo.podName,
-		FileMetaHash: utils.NewReference(metaRef).String(),
+		FileMetaHash: common.NewReference(metaRef).String(),
 		Sender:       rootReference.String(),
 		Receiver:     destinationRef,
 		SharedTime:   strconv.FormatInt(now.Unix(), 10),
@@ -128,7 +128,7 @@ func (u *Users) ShareFileWithUser(podName, podFilePath, destinationRef string, u
 		return "", err
 	}
 
-	//encrypt data
+	// encrypt data
 	encryptedData, err := encryptData(data, now.Unix())
 	if err != nil {
 		return "", err
@@ -141,11 +141,11 @@ func (u *Users) ShareFileWithUser(podName, podFilePath, destinationRef string, u
 	}
 
 	// add now to the ref
-	sharingRef := utils.NewSharingReference(ref, now.Unix())
+	sharingRef := common.NewSharingReference(ref, now.Unix())
 	return sharingRef.String(), nil
 }
 
-func (u *Users) ReceiveFileFromUser(podName string, sharingRef utils.SharingReference, userInfo *Info, pod *pod.Pod, podDir string) (string, string, error) {
+func (u *Users) ReceiveFileFromUser(podName string, sharingRef common.SharingReference, userInfo *Info, pod *pod.Pod, podDir string) (string, string, error) {
 	metaRef := sharingRef.GetRef()
 	unixTime := sharingRef.GetNonce()
 
@@ -213,11 +213,11 @@ func (u *Users) ReceiveFileFromUser(podName string, sharingRef utils.SharingRefe
 		return "", "", err
 	}
 
-	if podDir == utils.PathSeperator {
+	if podDir == common.PathSeperator {
 		podDir = ""
 	}
 
-	return podDir + utils.PathSeperator + fileName, sharingEntry.FileMetaHash, nil
+	return podDir + common.PathSeperator + fileName, sharingEntry.FileMetaHash, nil
 }
 
 func (u *Users) GetSharingInbox(userInfo *Info) (*Inbox, error) {
@@ -228,7 +228,7 @@ func (u *Users) GetSharingInbox(userInfo *Info) (*Inbox, error) {
 		return nil, err
 	}
 
-	if len(inboxRef) < utils.ReferenceLength {
+	if len(inboxRef) < common.ReferenceLength {
 		return nil, fmt.Errorf("empty inbox")
 	}
 
@@ -255,7 +255,7 @@ func (u *Users) GetSharingOutbox(userInfo *Info) (*Outbox, error) {
 		return nil, err
 	}
 
-	if len(outboxRef) < utils.ReferenceLength {
+	if len(outboxRef) < common.ReferenceLength {
 		return nil, fmt.Errorf("empty outbox")
 	}
 
@@ -291,7 +291,7 @@ func decryptData(data []byte, now int64) ([]byte, error) {
 	return btcec.Decrypt(&privateKey, data)
 }
 
-func (u *Users) ReceiveFileInfo(podName string, sharingRef utils.SharingReference, userInfo *Info, pod *pod.Pod) (*ReceiveFileInfo, error) {
+func (u *Users) ReceiveFileInfo(podName string, sharingRef common.SharingReference, userInfo *Info, pod *pod.Pod) (*ReceiveFileInfo, error) {
 	metaRef := sharingRef.GetRef()
 	unixTime := sharingRef.GetNonce()
 
@@ -314,7 +314,7 @@ func (u *Users) ReceiveFileInfo(podName string, sharingRef utils.SharingReferenc
 		return nil, err
 	}
 
-	fileMetaRef, err := utils.ParseHexReference(sharingEntry.FileMetaHash)
+	fileMetaRef, err := common.ParseHexReference(sharingEntry.FileMetaHash)
 	if err != nil {
 		return nil, err
 	}

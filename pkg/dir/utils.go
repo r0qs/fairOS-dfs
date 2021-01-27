@@ -16,12 +16,10 @@ limitations under the License.
 
 package dir
 
-import (
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
-)
+import "github.com/fairdatasociety/fairOS-dfs/pkg/common"
 
 func (d *DirInode) IsDirInodeRoot() bool {
-	return d.Meta.Path == utils.PathSeperator
+	return d.Meta.Path == common.PathSeperator
 }
 
 func (d *DirInode) GetDirInodePathAndNameForRoot() string {
@@ -29,7 +27,7 @@ func (d *DirInode) GetDirInodePathAndNameForRoot() string {
 }
 
 func (d *DirInode) GetDirInodePathAndName() string {
-	return d.Meta.Path + utils.PathSeperator + d.Meta.Name
+	return d.Meta.Path + common.PathSeperator + d.Meta.Name
 }
 
 func (d *DirInode) GetDirInodePathOnly() string {

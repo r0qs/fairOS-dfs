@@ -22,8 +22,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	m "github.com/fairdatasociety/fairOS-dfs/pkg/meta"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (f *File) LoadFileMeta(podName string, addr []byte) (int, error) {
@@ -37,8 +37,8 @@ func (f *File) LoadFileMeta(podName string, addr []byte) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 	meta.MetaReference = addr
-	f.AddToFileMap(meta.Path+utils.PathSeperator+meta.Name, meta)
-	fileName := strings.TrimPrefix(meta.Path+utils.PathSeperator+meta.Name, podName)
+	f.AddToFileMap(meta.Path+common.PathSeperator+meta.Name, meta)
+	fileName := strings.TrimPrefix(meta.Path+common.PathSeperator+meta.Name, podName)
 	f.logger.Infof(fileName)
 	return http.StatusOK, nil
 }

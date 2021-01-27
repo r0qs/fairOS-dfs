@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 func (p *Pod) DownloadFile(podName, podFile string) (io.ReadCloser, string, string, error) {
@@ -37,7 +37,7 @@ func (p *Pod) DownloadFile(podName, podFile string) (io.ReadCloser, string, stri
 	if podInfo.IsCurrentDirRoot() {
 		path = podInfo.GetCurrentPodPathAndName() + podFile
 	} else {
-		path = podInfo.GetCurrentDirPathAndName() + utils.PathSeperator + podFile
+		path = podInfo.GetCurrentDirPathAndName() + common.PathSeperator + podFile
 	}
 
 	if !podInfo.getFile().IsFileAlreadyPResent(path) {

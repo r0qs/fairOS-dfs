@@ -20,17 +20,17 @@ import (
 	"sync"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/collection"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	di "github.com/fairdatasociety/fairOS-dfs/pkg/dir"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	f "github.com/fairdatasociety/fairOS-dfs/pkg/file"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 type Info struct {
 	podName         string
-	user            utils.Address
+	user            common.Address
 	dir             *di.Directory
 	file            *f.File
 	accountInfo     *account.Info
@@ -51,7 +51,7 @@ func (i *Info) getFile() *f.File {
 	return i.file
 }
 
-func (i *Info) GetUser() utils.Address {
+func (i *Info) GetUser() common.Address {
 	return i.user
 }
 
@@ -66,6 +66,7 @@ func (i *Info) GetFeed() *feed.API {
 func (i *Info) GetCurrentPodInode() *di.DirInode {
 	return i.currentPodInode
 }
+
 func (i *Info) GetCurrentDirInode() *di.DirInode {
 	return i.currentDirInode
 }
@@ -73,12 +74,13 @@ func (i *Info) GetCurrentDirInode() *di.DirInode {
 func (i *Info) SetCurrentPodInode(podInode *di.DirInode) {
 	i.currentPodInode = podInode
 }
+
 func (i *Info) SetCurrentDirInode(podInode *di.DirInode) {
 	i.currentDirInode = podInode
 }
 
 func (p *Info) IsCurrentDirRoot() bool {
-	if p.currentDirInode.Meta.Path == utils.PathSeperator {
+	if p.currentDirInode.Meta.Path == common.PathSeperator {
 		return true
 	} else {
 		return false
@@ -106,7 +108,7 @@ func (i *Info) GetCurrentDirNameOnly() string {
 }
 
 func (i *Info) GetCurrentDirPathAndName() string {
-	return i.currentDirInode.Meta.Path + utils.PathSeperator + i.currentDirInode.Meta.Name
+	return i.currentDirInode.Meta.Path + common.PathSeperator + i.currentDirInode.Meta.Name
 }
 
 func (i *Info) GetKVStore() *collection.KeyValue {

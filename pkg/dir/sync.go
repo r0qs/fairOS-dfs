@@ -21,8 +21,8 @@ import (
 	"net/http"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (d *Directory) LoadDirMeta(podName string, curDirInode *DirInode, fd *feed.API, accountInfo *account.Info) error {
@@ -45,7 +45,7 @@ func (d *Directory) LoadDirMeta(podName string, curDirInode *DirInode, fd *feed.
 			return err
 		}
 
-		path := dirInode.Meta.Path + utils.PathSeperator + dirInode.Meta.Name
+		path := dirInode.Meta.Path + common.PathSeperator + dirInode.Meta.Name
 		d.AddToDirectoryMap(path, dirInode)
 		d.logger.Infof(path)
 

@@ -34,8 +34,8 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed/lookup"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 type Handler struct {
@@ -114,7 +114,6 @@ func (h *Handler) GetContent(feed *Feed) (swarm.Address, []byte, error) {
 // See the `query` documentation and helper functions:
 // `NewQueryLatest` and `NewQuery`
 func (h *Handler) Lookup(ctx context.Context, query *Query) (*CacheEntry, error) {
-
 	timeLimit := query.TimeLimit
 	if timeLimit == 0 { // if time limit is set to zero, the user wants to get the latest update
 		timeLimit = TimestampProvider.Now().Time
@@ -183,7 +182,7 @@ func (h *Handler) Lookup(ctx context.Context, query *Query) (*CacheEntry, error)
 func (h *Handler) fromChunk(chunk swarm.Chunk, r *Request, q *Query, id *ID) error {
 	chunkdata := chunk.Data()
 
-	if len(chunkdata) < idLength+signatureLength+utils.SpanLength {
+	if len(chunkdata) < idLength+signatureLength+common.SpanLength {
 		return fmt.Errorf("invalid chunk data len")
 	}
 
@@ -193,8 +192,8 @@ func (h *Handler) fromChunk(chunk swarm.Chunk, r *Request, q *Query, id *ID) err
 	r.Signature = &Signature{}
 	copy(r.Signature[:], chunkdata[cursor:cursor+signatureLength])
 	cursor += signatureLength
-	span := binary.LittleEndian.Uint64(chunkdata[cursor : cursor+utils.SpanLength])
-	cursor += utils.SpanLength
+	span := binary.LittleEndian.Uint64(chunkdata[cursor : cursor+common.SpanLength])
+	cursor += common.SpanLength
 	r.data = make([]byte, span)
 	copy(r.data, chunkdata[cursor:uint64(cursor)+span])
 
@@ -231,7 +230,7 @@ func hashFunc() hash.Hash {
 	return sha3.NewLegacyKeccak256()
 }
 
-func (h *Handler) getAddress(topic Topic, user utils.Address, epoch lookup.Epoch) (swarm.Address, error) {
+func (h *Handler) getAddress(topic Topic, user common.Address, epoch lookup.Epoch) (swarm.Address, error) {
 	id, err := h.getId(topic, epoch.Time, epoch.Level)
 	if err != nil {
 		return swarm.ZeroAddress, err
@@ -253,14 +252,14 @@ func (h *Handler) toChunkContent(req *Request, id, payloadId []byte) ([]byte, er
 	copy(req.Signature[:], signaturebytes)
 
 	// create the entire soc payload
-	buf := make([]byte, idLength+signatureLength+utils.SpanLength+len(req.data))
+	buf := make([]byte, idLength+signatureLength+common.SpanLength+len(req.data))
 	var cursor int
 	copy(buf[cursor:cursor+idLength], id)
 	cursor += idLength
 	copy(buf[cursor:cursor+signatureLength], signaturebytes)
 	cursor += signatureLength
-	binary.LittleEndian.PutUint64(buf[cursor:cursor+utils.SpanLength], uint64(len(req.data)))
-	cursor += utils.SpanLength
+	binary.LittleEndian.PutUint64(buf[cursor:cursor+common.SpanLength], uint64(len(req.data)))
+	cursor += common.SpanLength
 	copy(buf[cursor:cursor+len(req.data)], req.data)
 	req.binaryData = buf
 

@@ -27,9 +27,9 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -41,7 +41,7 @@ const (
 type KeyValue struct {
 	fd           *feed.API
 	ai           *account.Info
-	user         utils.Address
+	user         common.Address
 	client       blockstore.Client
 	openKVTables map[string]*KVTable
 	openKVTMu    sync.RWMutex
@@ -55,7 +55,7 @@ type KVTable struct {
 	columns   []string
 }
 
-func NewKeyValueStore(fd *feed.API, ai *account.Info, user utils.Address, client blockstore.Client, logger logging.Logger) *KeyValue {
+func NewKeyValueStore(fd *feed.API, ai *account.Info, user common.Address, client blockstore.Client, logger logging.Logger) *KeyValue {
 	return &KeyValue{
 		fd:           fd,
 		ai:           ai,
@@ -125,7 +125,6 @@ func (kv *KeyValue) DeleteKVTable(name string) error {
 	}
 	delete(kvtables, name)
 	return kv.storeKVTables(kvtables)
-
 }
 
 func (kv *KeyValue) OpenKVTable(name string) error {
@@ -295,7 +294,6 @@ func (kv *KeyValue) KVSeek(name, start, end string, limit int64) (*Iterator, err
 		default:
 			return nil, ErrKVInvalidIndexType
 		}
-
 	}
 	return nil, ErrKVTableNotOpened
 }
@@ -317,7 +315,7 @@ func (kv *KeyValue) KVGetNext(name string) ([]string, string, []byte, error) {
 
 func (kv *KeyValue) LoadKVTables() (map[string][]string, error) {
 	collections := make(map[string][]string)
-	topic := utils.HashString(kvFile)
+	topic := common.HashString(kvFile)
 	_, data, err := kv.fd.GetFeedData(topic, kv.user)
 	if err != nil {
 		if err.Error() != "no feed updates found" {
@@ -352,7 +350,7 @@ func (kv *KeyValue) storeKVTables(collections map[string][]string) error {
 			buf.WriteString(line + "\n")
 		}
 	}
-	topic := utils.HashString(kvFile)
+	topic := common.HashString(kvFile)
 	_, err := kv.fd.UpdateFeed(topic, kv.user, buf.Bytes())
 	if err != nil {
 		return err

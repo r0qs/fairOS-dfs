@@ -27,10 +27,10 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	c "github.com/fairdatasociety/fairOS-dfs/pkg/collection"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	d "github.com/fairdatasociety/fairOS-dfs/pkg/dir"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	f "github.com/fairdatasociety/fairOS-dfs/pkg/file"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -64,7 +64,7 @@ func (p *Pod) CreatePod(podName, passPhrase, addressString string) (*Info, error
 
 		// shared pod, so add only address to the account info
 		accountInfo = p.acc.GetEmptyAccountInfo()
-		address := utils.HexToAddress(addressString)
+		address := common.HexToAddress(addressString)
 		accountInfo.SetAddress(address)
 
 		fd = feed.New(accountInfo, p.client, p.logger)
@@ -72,7 +72,7 @@ func (p *Pod) CreatePod(podName, passPhrase, addressString string) (*Info, error
 		dir = d.NewDirectory(podName, p.client, fd, accountInfo, file, p.logger)
 
 		// get the inode instead of creating
-		_, dirInode, err = dir.GetDirNode(utils.PathSeperator+podName, fd, accountInfo)
+		_, dirInode, err = dir.GetDirNode(common.PathSeperator+podName, fd, accountInfo)
 		if err != nil {
 			return nil, err
 		}
@@ -154,7 +154,7 @@ func (p *Pod) CreatePod(podName, passPhrase, addressString string) (*Info, error
 
 func (p *Pod) loadUserPods() (map[int]string, map[string]string, error) {
 	// The user pod file topic should be in the name of the user account
-	topic := utils.HashString(podFile)
+	topic := common.HashString(podFile)
 	_, data, err := p.fd.GetFeedData(topic, p.acc.GetAddress(account.UserAccountIndex))
 	if err != nil {
 		if err.Error() != "no feed updates found" {
@@ -207,7 +207,7 @@ func (p *Pod) storeUserPods(pods map[int]string, sharedPods map[string]string) e
 		buf.WriteString(line + "\n")
 	}
 
-	topic := utils.HashString(podFile)
+	topic := common.HashString(podFile)
 	_, err := p.fd.UpdateFeed(topic, p.acc.GetAddress(account.UserAccountIndex), buf.Bytes())
 	if err != nil {
 		return err

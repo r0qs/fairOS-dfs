@@ -32,8 +32,8 @@ import (
 	"github.com/tyler-smith/go-bip39"
 	"golang.org/x/crypto/ssh/terminal"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -50,7 +50,7 @@ type Account struct {
 type Info struct {
 	privateKey *ecdsa.PrivateKey
 	publicKey  *ecdsa.PublicKey
-	address    utils.Address
+	address    common.Address
 }
 
 func New(logger logging.Logger) *Account {
@@ -298,7 +298,7 @@ func (a *Account) GetUserPrivateKey(index int) *ecdsa.PrivateKey {
 	}
 }
 
-func (a *Account) GetAddress(index int) utils.Address {
+func (a *Account) GetAddress(index int) common.Address {
 	if index == UserAccountIndex {
 		return a.userAcount.address
 	} else {
@@ -338,11 +338,11 @@ func (a *Info) IsReadOnlyPod() bool {
 	return a.privateKey == nil
 }
 
-func (ai *Info) GetAddress() utils.Address {
+func (ai *Info) GetAddress() common.Address {
 	return ai.address
 }
 
-func (ai *Info) SetAddress(addr utils.Address) {
+func (ai *Info) SetAddress(addr common.Address) {
 	ai.address = addr
 }
 

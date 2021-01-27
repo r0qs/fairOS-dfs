@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package utils
+package common
 
 import (
 	"bytes"
@@ -25,7 +25,6 @@ import (
 )
 
 func Test_Address(t *testing.T) {
-
 	buf := make([]byte, 4096)
 	_, err := rand.Read(buf)
 	if err != nil {
@@ -46,5 +45,4 @@ func Test_Address(t *testing.T) {
 	if !bytes.Equal(refBytes, newRef.Bytes()) {
 		t.Fatalf("bytes are not equal")
 	}
-
 }

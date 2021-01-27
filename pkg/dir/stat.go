@@ -20,7 +20,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 type DirStats struct {
@@ -51,7 +51,7 @@ func (d *Directory) DirStat(podName, dirName string, dirInode *DirInode, account
 	}
 	path := meta.Path
 	if meta.Path == podName {
-		path = utils.PathSeperator
+		path = common.PathSeperator
 	}
 
 	return &DirStats{

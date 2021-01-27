@@ -21,7 +21,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 const (
@@ -42,7 +42,7 @@ func (u *Users) isUserMappingPresent(userName, dataDir string) bool {
 	return !info.IsDir()
 }
 
-func (u *Users) storeUserNameToAddressFileMapping(userName, dataDir string, address utils.Address) error {
+func (u *Users) storeUserNameToAddressFileMapping(userName, dataDir string, address common.Address) error {
 	destDir := filepath.Join(dataDir, userDirectoryName)
 	err := os.MkdirAll(destDir, 0700)
 	if err != nil {
@@ -58,12 +58,12 @@ func (u *Users) deleteUserMapping(userName, dataDir string) error {
 	return os.Remove(userFileName)
 }
 
-func (u *Users) getAddressFromUserName(userName, dataDir string) (utils.Address, error) {
+func (u *Users) getAddressFromUserName(userName, dataDir string) (common.Address, error) {
 	destDir := filepath.Join(dataDir, userDirectoryName)
 	userFileName := filepath.Join(destDir, userName)
 	data, err := ioutil.ReadFile(userFileName)
 	if err != nil {
-		return utils.ZeroAddress, err
+		return common.ZeroAddress, err
 	}
-	return utils.NewAddress(data), nil
+	return common.NewAddress(data), nil
 }

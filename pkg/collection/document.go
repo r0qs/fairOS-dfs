@@ -29,9 +29,9 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -44,7 +44,7 @@ const (
 type Document struct {
 	fd          *feed.API
 	ai          *account.Info
-	user        utils.Address
+	user        common.Address
 	client      blockstore.Client
 	openDocDBs  map[string]*DocumentDB
 	openDOcDBMu sync.RWMutex
@@ -80,7 +80,7 @@ type DocBatch struct {
 	batches map[string]*Batch
 }
 
-func NewDocumentStore(fd *feed.API, ai *account.Info, user utils.Address, client blockstore.Client, logger logging.Logger) *Document {
+func NewDocumentStore(fd *feed.API, ai *account.Info, user common.Address, client blockstore.Client, logger logging.Logger) *Document {
 	return &Document{
 		fd:         fd,
 		ai:         ai,
@@ -238,7 +238,7 @@ func (d *Document) DeleteDocumentDB(dbName string) error {
 		return d.OpenDocumentDB(dbName)
 	}
 	docDB := d.getOpenedDb(dbName)
-	//TODO: before deleting the indexes, unpin all the documents referenced in the ID index
+	// TODO: before deleting the indexes, unpin all the documents referenced in the ID index
 	for _, si := range docDB.simpleIndexes {
 		return si.DeleteIndex()
 	}
@@ -685,7 +685,7 @@ func (d *Document) Find(dbName, expr string, limit int) ([][]byte, error) {
 
 func (d *Document) LoadDocumentDBSchemas() (map[string]DBSchema, error) {
 	collections := make(map[string]DBSchema)
-	topic := utils.HashString(DocumentFile)
+	topic := common.HashString(DocumentFile)
 	_, data, err := d.fd.GetFeedData(topic, d.user)
 	if err != nil {
 		if err.Error() != "no feed updates found" {
@@ -727,7 +727,7 @@ func (d *Document) storeDocumentDBSchemas(collections map[string]DBSchema) error
 			buf.WriteString(string(line) + "\n")
 		}
 	}
-	topic := utils.HashString(DocumentFile)
+	topic := common.HashString(DocumentFile)
 	_, err := d.fd.UpdateFeed(topic, d.user, buf.Bytes())
 	if err != nil {
 		return err

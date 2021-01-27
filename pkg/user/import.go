@@ -21,12 +21,12 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/cookie"
 	d "github.com/fairdatasociety/fairOS-dfs/pkg/dir"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	f "github.com/fairdatasociety/fairOS-dfs/pkg/file"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/pod"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (u *Users) ImportUsingAddress(userName, passPhrase, addressString, dataDir string, client blockstore.Client, response http.ResponseWriter, sessionId string) error {
@@ -39,7 +39,7 @@ func (u *Users) ImportUsingAddress(userName, passPhrase, addressString, dataDir 
 	fd := feed.New(accountInfo, client, u.logger)
 	file := f.NewFile(userName, client, fd, accountInfo, u.logger)
 
-	address := utils.HexToAddress(addressString)
+	address := common.HexToAddress(addressString)
 
 	// load the encrypted mnemonic and see if it is valid
 	encryptedMnemonic, err := u.getEncryptedMnemonic(userName, address, fd)

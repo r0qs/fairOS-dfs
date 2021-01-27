@@ -22,8 +22,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	m "github.com/fairdatasociety/fairOS-dfs/pkg/meta"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 const (
@@ -90,7 +90,6 @@ func (d *Directory) ListDir(podName, path string, printNames bool) []DirOrFileEn
 		listEntries = append(listEntries, entry)
 	}
 	return listEntries
-
 }
 
 func (d *Directory) ListDirOnlyNames(podName, path string, printNames bool) ([]string, []string) {
@@ -109,7 +108,6 @@ func (d *Directory) ListDirOnlyNames(podName, path string, printNames bool) ([]s
 					dirListing = append(dirListing, directory+name)
 				} else {
 					dirListing = append(dirListing, name)
-
 				}
 			}
 
@@ -123,9 +121,9 @@ func (d *Directory) ListDirOnlyNames(podName, path string, printNames bool) ([]s
 					var fileName string
 					fileName = strings.TrimPrefix(file, path)
 					fileName = strings.TrimSpace(fileName)
-					fileName = strings.TrimPrefix(fileName, utils.PathSeperator)
-					if strings.ContainsAny(fileName, utils.PathSeperator) {
-						fileName = utils.PathSeperator + fileName
+					fileName = strings.TrimPrefix(fileName, common.PathSeperator)
+					if strings.ContainsAny(fileName, common.PathSeperator) {
+						fileName = common.PathSeperator + fileName
 					}
 					if printNames {
 						fileListing = append(fileListing, fl+fileName)

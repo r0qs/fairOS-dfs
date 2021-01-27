@@ -22,8 +22,8 @@ import (
 	gopath "path"
 	"time"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	d "github.com/fairdatasociety/fairOS-dfs/pkg/dir"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (p *Pod) MakeDir(podName, dirName string) error {
@@ -83,7 +83,7 @@ func (p *Pod) MakeDir(podName, dirName string) error {
 					}
 					if !found {
 						previousDirINode.Hashes = append(previousDirINode.Hashes, topic)
-						dirInode.Meta.Path = previousDirINode.Meta.Path + utils.PathSeperator + previousDirINode.Meta.Name
+						dirInode.Meta.Path = previousDirINode.Meta.Path + common.PathSeperator + previousDirINode.Meta.Name
 						previousDirINode.Meta.ModificationTime = time.Now().Unix()
 						_, err = directory.UpdateDirectory(previousDirINode)
 						if err != nil {
@@ -134,7 +134,7 @@ func (p *Pod) UpdateTillThePod(podName string, directory *d.Directory, topic []b
 	}
 
 	var dirInode *d.DirInode
-	for path != utils.PathSeperator {
+	for path != common.PathSeperator {
 		_, dirInode, err = directory.GetDirNode(path, podInfo.GetFeed(), podInfo.GetAccountInfo())
 		if err != nil {
 			return err
@@ -149,7 +149,7 @@ func (p *Pod) UpdateTillThePod(podName string, directory *d.Directory, topic []b
 				}
 			}
 			// ignore if it is the current dir, otherwise there will be a loop
-			pathTopic := utils.HashString(path)
+			pathTopic := common.HashString(path)
 			if bytes.Equal(pathTopic, topic) {
 				path = gopath.Dir(path)
 				continue
@@ -187,7 +187,7 @@ func (p *Pod) buildPath(podInfo *Info, dirs []string, index int) string {
 		path = podInfo.GetCurrentPodPathAndName()
 	}
 	for ; i <= index; i++ {
-		path = path + utils.PathSeperator + dirs[i]
+		path = path + common.PathSeperator + dirs[i]
 	}
 	return path
 }

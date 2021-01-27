@@ -22,9 +22,9 @@ import (
 
 	"github.com/ethersphere/bee/pkg/swarm"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/dir"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/file"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 type PodStat struct {
@@ -68,7 +68,7 @@ func (p *Pod) DirectoryStat(podName, podFileOrDir string, printNames bool) (*dir
 	dirInode := info.GetDirectory().GetDirFromDirectoryMap(path)
 	if dirInode != nil {
 		meta := dirInode.Meta
-		addr, dirInode, err := info.GetDirectory().GetDirNode(meta.Path+utils.PathSeperator+meta.Name, info.GetFeed(), info.GetAccountInfo())
+		addr, dirInode, err := info.GetDirectory().GetDirNode(meta.Path+common.PathSeperator+meta.Name, info.GetFeed(), info.GetAccountInfo())
 		if err != nil {
 			return nil, err
 		}

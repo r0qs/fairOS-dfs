@@ -25,7 +25,7 @@ import (
 	"testing"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore/bee/mock"
@@ -156,7 +156,7 @@ func TestIndexIterator(t *testing.T) {
 		}
 
 		// check the iteration is in order until the end key
-		//skip the first key since "0" is lexicographically smaller than "00"
+		// skip the first key since "0" is lexicographically smaller than "00"
 		for i := 1; i < 14; i++ {
 			if itr.Next() {
 				key := sortedKeys[i]
@@ -338,7 +338,6 @@ func TestIndexIterator(t *testing.T) {
 			t.Fatalf("iterating beyond end key")
 		}
 	})
-
 }
 
 func addDocsForStringIteration(t *testing.T, idx *collection.Index, actualCount uint64) ([]string, []string) {
@@ -426,7 +425,7 @@ func sortLexicographically(t *testing.T, keys, values []string) ([]string, []str
 	return keys, values
 }
 
-func createAndOpenIndex(t *testing.T, collectionName string, indexType collection.IndexType, fd *feed.API, user utils.Address,
+func createAndOpenIndex(t *testing.T, collectionName string, indexType collection.IndexType, fd *feed.API, user common.Address,
 	client blockstore.Client, ai *account.Info, logger logging.Logger) *collection.Index {
 	err := collection.CreateIndex(collectionName, "key", indexType, fd, user, client)
 	if err != nil {

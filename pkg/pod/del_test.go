@@ -23,9 +23,9 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore/bee/mock"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func TestDeleteNewPod(t *testing.T) {
@@ -75,7 +75,7 @@ func TestDeleteNewPod(t *testing.T) {
 		}
 
 		infoGot, err := pod1.GetPodInfoFromPodMap(podName1)
-		if err.Error() != ("could not find pod: " + utils.PathSeperator + podName1) {
+		if err.Error() != ("could not find pod: " + common.PathSeperator + podName1) {
 			t.Fatalf("pod not deleted from map")
 		}
 		if infoGot != nil {
@@ -86,7 +86,6 @@ func TestDeleteNewPod(t *testing.T) {
 		if dirInode != nil {
 			t.Fatalf("pod directory not deleted from directory map")
 		}
-
 	})
 
 	t.Run("create-two-pod-and-del", func(t *testing.T) {
@@ -131,7 +130,7 @@ func TestDeleteNewPod(t *testing.T) {
 		}
 
 		infoGot, err := pod1.GetPodInfoFromPodMap(podName1)
-		if err.Error() != ("could not find pod: " + utils.PathSeperator + podName1) {
+		if err.Error() != ("could not find pod: " + common.PathSeperator + podName1) {
 			t.Fatalf("pod not deleted from map")
 		}
 		if infoGot != nil {
@@ -151,7 +150,5 @@ func TestDeleteNewPod(t *testing.T) {
 		if dirInode == nil {
 			t.Fatalf("pod directory wrongly deleted from directory map")
 		}
-
 	})
-
 }

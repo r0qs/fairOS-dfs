@@ -19,8 +19,8 @@ package pod
 import (
 	"strings"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/dir"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (p *Pod) ListPods() ([]string, []string, error) {
@@ -62,8 +62,8 @@ func (p *Pod) ListEntiesInDir(podName, dirName string) ([]dir.DirOrFileEntry, er
 			path = info.GetCurrentPodPathAndName()
 		}
 	} else {
-		path = utils.PathSeperator + podName + path
-		path = strings.TrimSuffix(path, utils.PathSeperator)
+		path = common.PathSeperator + podName + path
+		path = strings.TrimSuffix(path, common.PathSeperator)
 	}
 
 	return directory.ListDir(podName, path, printNames), nil

@@ -20,15 +20,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	d "github.com/fairdatasociety/fairOS-dfs/pkg/dir"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (p *Pod) RemoveDir(podName, dirName string) error {
 	if !p.isPodOpened(podName) {
 		return ErrPodNotOpened
 	}
-	dirName = strings.TrimPrefix(dirName, utils.PathSeperator)
+	dirName = strings.TrimPrefix(dirName, common.PathSeperator)
 
 	info, err := p.GetPodInfoFromPodMap(podName)
 	if err != nil {
@@ -50,11 +50,11 @@ func (p *Pod) RemoveDir(podName, dirName string) error {
 		return fmt.Errorf("name is not a directory")
 	}
 
-	topic := info.GetCurrentDirPathAndName() + utils.PathSeperator + dirName
+	topic := info.GetCurrentDirPathAndName() + common.PathSeperator + dirName
 	if info.IsCurrentDirRoot() {
-		topic = info.GetCurrentPodPathAndName() + utils.PathSeperator + dirName
+		topic = info.GetCurrentPodPathAndName() + common.PathSeperator + dirName
 	}
-	topicBytes := utils.HashString(topic)
+	topicBytes := common.HashString(topic)
 	err = p.UpdateTillThePod(podName, directory, topicBytes, dirInode.GetDirInodePathOnly(), false)
 	if err != nil {
 		return err
@@ -70,12 +70,12 @@ func (p *Pod) RemoveDir(podName, dirName string) error {
 }
 
 func (p *Pod) GetInodeFromName(nameToGetMeta string, curDirInode *d.DirInode, directory *d.Directory, info *Info) (*d.DirInode, error) {
-	path := info.GetCurrentDirPathAndName() + utils.PathSeperator + nameToGetMeta
+	path := info.GetCurrentDirPathAndName() + common.PathSeperator + nameToGetMeta
 	if info.IsCurrentDirRoot() {
-		if strings.HasPrefix(nameToGetMeta, utils.PathSeperator) {
+		if strings.HasPrefix(nameToGetMeta, common.PathSeperator) {
 			path = curDirInode.Meta.Path + curDirInode.Meta.Name + nameToGetMeta
 		} else {
-			path = curDirInode.Meta.Path + curDirInode.Meta.Name + utils.PathSeperator + nameToGetMeta
+			path = curDirInode.Meta.Path + curDirInode.Meta.Name + common.PathSeperator + nameToGetMeta
 		}
 	}
 	return directory.GetDirFromDirectoryMap(path), nil

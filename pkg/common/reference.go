@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package utils
+package common
 
 import "encoding/hex"
 
@@ -30,6 +30,7 @@ type Reference struct {
 func NewReference(b []byte) Reference {
 	return Reference{r: b}
 }
+
 func ParseHexReference(s string) (a Reference, err error) {
 	b, err := hex.DecodeString(s)
 	if err != nil {
@@ -37,9 +38,11 @@ func ParseHexReference(s string) (a Reference, err error) {
 	}
 	return NewReference(b), nil
 }
+
 func (ref Reference) String() string {
 	return hex.EncodeToString(ref.r)
 }
+
 func (ref Reference) Bytes() []byte {
 	return ref.r
 }

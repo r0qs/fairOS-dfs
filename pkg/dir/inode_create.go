@@ -20,8 +20,8 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	m "github.com/fairdatasociety/fairOS-dfs/pkg/meta"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (d *Directory) CreateDirINode(podName, dirName string, parent *DirInode) (*DirInode, []byte, error) {
@@ -45,8 +45,8 @@ func (d *Directory) CreateDirINode(podName, dirName string, parent *DirInode) (*
 	}
 
 	// create a feed for the directory and add data to it
-	totalPath := parentPath + utils.PathSeperator + dirName
-	topic := utils.HashString(totalPath)
+	totalPath := parentPath + common.PathSeperator + dirName
+	topic := common.HashString(totalPath)
 	_, err = d.fd.CreateFeed(topic, d.acc.GetAddress(), data)
 	if err != nil {
 		return nil, nil, err
@@ -58,18 +58,18 @@ func (d *Directory) CreateDirINode(podName, dirName string, parent *DirInode) (*
 
 func (d *Directory) IsDirINodePresent(podName, dirName string, parent *DirInode) bool {
 	parentPath := getPath(podName, parent)
-	totalPath := parentPath + utils.PathSeperator + dirName
-	topic := utils.HashString(totalPath)
+	totalPath := parentPath + common.PathSeperator + dirName
+	topic := common.HashString(totalPath)
 	_, _, err := d.fd.GetFeedData(topic, d.getAccount().GetAddress())
 	return err == nil
 }
 
 func getPath(podName string, parent *DirInode) string {
 	var path string
-	if parent.Meta.Path == utils.PathSeperator {
+	if parent.Meta.Path == common.PathSeperator {
 		path = parent.Meta.Path + parent.Meta.Name
 	} else {
-		path = parent.Meta.Path + utils.PathSeperator + parent.Meta.Name
+		path = parent.Meta.Path + common.PathSeperator + parent.Meta.Name
 	}
 	return path
 }
@@ -94,8 +94,8 @@ func (d *Directory) CreatePodINode(podName string) (*DirInode, []byte, error) {
 	}
 
 	// create a feed and store the metadata of the pod
-	totalPath := utils.PathSeperator + podName
-	topic := utils.HashString(totalPath)
+	totalPath := common.PathSeperator + podName
+	topic := common.HashString(totalPath)
 	_, err = d.fd.CreateFeed(topic, d.acc.GetAddress(), data)
 	if err != nil {
 		return nil, nil, err
@@ -106,12 +106,12 @@ func (d *Directory) CreatePodINode(podName string) (*DirInode, []byte, error) {
 }
 
 func (d *Directory) DeletePodInode(podName string) error {
-	totalPath := utils.PathSeperator + podName
-	topic := utils.HashString(totalPath)
+	totalPath := common.PathSeperator + podName
+	topic := common.HashString(totalPath)
 	return d.fd.DeleteFeed(topic, d.acc.GetAddress())
 }
 
 func (d *Directory) DeleteDirectoryInode(dirPath string) error {
-	topic := utils.HashString(dirPath)
+	topic := common.HashString(dirPath)
 	return d.fd.DeleteFeed(topic, d.acc.GetAddress())
 }

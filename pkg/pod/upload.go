@@ -23,8 +23,7 @@ import (
 	"time"
 
 	"github.com/dustin/go-humanize"
-
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 func (p *Pod) UploadFile(podName, fileName string, fileSize int64, fd io.Reader, podDir, blockSize, compression string) (string, error) {
@@ -55,7 +54,7 @@ func (p *Pod) UploadFile(podName, fileName string, fileSize int64, fd io.Reader,
 		return "", err
 	}
 
-	fpath := path + utils.PathSeperator + fileName
+	fpath := path + common.PathSeperator + fileName
 	if podInfo.file.IsFileAlreadyPResent(fpath) {
 		return "", fmt.Errorf("file already present in the destination dir")
 	}
@@ -78,12 +77,12 @@ func (p *Pod) UploadFile(podName, fileName string, fileSize int64, fd io.Reader,
 		}
 	}
 
-	return utils.NewReference(ref).String(), nil
+	return common.NewReference(ref).String(), nil
 }
 
 func (p *Pod) getFilePath(podDir string, podInfo *Info) string {
 	var path string
-	if podDir == utils.PathSeperator || podDir == podInfo.GetCurrentPodPathAndName() {
+	if podDir == common.PathSeperator || podDir == podInfo.GetCurrentPodPathAndName() {
 		return podInfo.GetCurrentPodPathAndName()
 	}
 
@@ -96,13 +95,13 @@ func (p *Pod) getFilePath(podDir string, podInfo *Info) string {
 		if podDir == "." {
 			path = podInfo.GetCurrentPodPathAndName()
 		} else {
-			path = podInfo.GetCurrentPodPathAndName() + utils.PathSeperator + podDir
+			path = podInfo.GetCurrentPodPathAndName() + common.PathSeperator + podDir
 		}
 	} else {
 		if podDir == "." {
 			path = podInfo.GetCurrentDirPathAndName()
 		} else {
-			path = podInfo.GetCurrentDirPathAndName() + utils.PathSeperator + podDir
+			path = podInfo.GetCurrentDirPathAndName() + common.PathSeperator + podDir
 		}
 	}
 	return path

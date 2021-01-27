@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 func (p *Pod) ChangeDir(podName, dirName string) (*Info, error) {
@@ -29,8 +29,8 @@ func (p *Pod) ChangeDir(podName, dirName string) (*Info, error) {
 		return nil, err
 	}
 
-	if len(directoryName) > utils.MaxDirectoryNameLength {
-		return nil, fmt.Errorf("directory Name length is > %v", utils.MaxDirectoryNameLength)
+	if len(directoryName) > common.MaxDirectoryNameLength {
+		return nil, fmt.Errorf("directory Name length is > %v", common.MaxDirectoryNameLength)
 	}
 
 	if !p.isPodOpened(podName) {
@@ -42,7 +42,7 @@ func (p *Pod) ChangeDir(podName, dirName string) (*Info, error) {
 		return nil, err
 	}
 
-	if directoryName[0] == "" || directoryName[0] == utils.PathSeperator {
+	if directoryName[0] == "" || directoryName[0] == common.PathSeperator {
 		podInfo.SetCurrentDirInode(podInfo.GetCurrentPodInode())
 		return podInfo, nil
 	}
@@ -72,13 +72,13 @@ func (p *Pod) ChangeDir(podName, dirName string) (*Info, error) {
 }
 
 func (p *Pod) getDirectoryPath(directoryName string, podInfo *Info) string {
-	path := podInfo.GetCurrentDirPathAndName() + utils.PathSeperator + directoryName
+	path := podInfo.GetCurrentDirPathAndName() + common.PathSeperator + directoryName
 
 	if podInfo.IsCurrentDirRoot() {
-		if strings.HasPrefix(directoryName, utils.PathSeperator) {
+		if strings.HasPrefix(directoryName, common.PathSeperator) {
 			path = podInfo.GetCurrentPodPathAndName() + directoryName
 		} else {
-			path = podInfo.GetCurrentPodPathAndName() + utils.PathSeperator + directoryName
+			path = podInfo.GetCurrentPodPathAndName() + common.PathSeperator + directoryName
 		}
 	}
 	return path

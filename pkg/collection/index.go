@@ -27,9 +27,9 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 type IndexType int
@@ -80,7 +80,7 @@ func toIndexTypeEnum(s string) IndexType {
 type Index struct {
 	name        string
 	indexType   IndexType
-	user        utils.Address
+	user        common.Address
 	accountInfo *account.Info
 	feed        *feed.API
 	client      blockstore.Client
@@ -89,16 +89,14 @@ type Index struct {
 	logger      logging.Logger
 }
 
-var (
-	NoOfParallelWorkers = runtime.NumCPU() * 4
-)
+var NoOfParallelWorkers = runtime.NumCPU() * 4
 
-func CreateIndex(collectionName, indexName string, indexType IndexType, fd *feed.API, user utils.Address, client blockstore.Client) error {
+func CreateIndex(collectionName, indexName string, indexType IndexType, fd *feed.API, user common.Address, client blockstore.Client) error {
 	if fd.IsReadOnlyFeed() {
 		return ErrReadOnlyIndex
 	}
 	actualIndexName := collectionName + indexName
-	topic := utils.HashString(actualIndexName)
+	topic := common.HashString(actualIndexName)
 	_, oldData, err := fd.GetFeedData(topic, user)
 	if err == nil && len(oldData) != 0 {
 		// if the feed is present and it has some data means there index is still valid
@@ -125,7 +123,7 @@ func CreateIndex(collectionName, indexName string, indexType IndexType, fd *feed
 	return nil
 }
 
-func OpenIndex(collectionName, indexName string, fd *feed.API, ai *account.Info, user utils.Address, client blockstore.Client, logger logging.Logger) (*Index, error) {
+func OpenIndex(collectionName, indexName string, fd *feed.API, ai *account.Info, user common.Address, client blockstore.Client, logger logging.Logger) (*Index, error) {
 	actualIndexName := collectionName + indexName
 	manifest := getRootManifestOfIndex(actualIndexName, fd, user, client)
 	if manifest == nil {
@@ -156,7 +154,7 @@ func (idx *Index) DeleteIndex() error {
 	}
 
 	// erase the top manifest
-	topic := utils.HashString(idx.name)
+	topic := common.HashString(idx.name)
 	_, err := idx.feed.UpdateFeed(topic, idx.user, []byte(""))
 	if err != nil {
 		return ErrDeleteingIndex
@@ -194,13 +192,13 @@ func (idx *Index) CountIndex() (uint64, error) {
 
 func (idx *Index) loadIndexAndCount(ctx context.Context, cancel context.CancelFunc, workers chan bool, manifest *Manifest, errC chan error) {
 	var count uint64
-	//var wg sync.WaitGroup
+	// var wg sync.WaitGroup
 
 	for _, entry := range manifest.Entries {
 		if entry.EType == IntermediateEntry {
-			//wg.Add(1)
-			//workers <- true
-			//go func(ent *Entry) {
+			// wg.Add(1)
+			// workers <- true
+			// go func(ent *Entry) {
 			//	defer func() {
 			//		//<- workers
 			//		wg.Done()
@@ -217,7 +215,7 @@ func (idx *Index) loadIndexAndCount(ctx context.Context, cancel context.CancelFu
 				return
 			}
 
-			//if some other goroutine fails, terminate this one too
+			// if some other goroutine fails, terminate this one too
 			select {
 			case <-ctx.Done():
 				return
@@ -229,7 +227,7 @@ func (idx *Index) loadIndexAndCount(ctx context.Context, cancel context.CancelFu
 			count++
 		}
 	}
-	//wg.Wait()
+	// wg.Wait()
 	atomic.AddUint64(&idx.count, count)
 }
 
@@ -237,7 +235,7 @@ func (idx *Index) loadIndexAndCount(ctx context.Context, cancel context.CancelFu
 func (idx *Index) loadManifest(manifestPath string) (*Manifest, error) {
 	// get feed data and unmarshall the manifest
 	idx.logger.Info("loading manifest: ", manifestPath)
-	topic := utils.HashString(manifestPath)
+	topic := common.HashString(manifestPath)
 	_, refData, err := idx.feed.GetFeedData(topic, idx.user)
 	if err != nil {
 		return nil, ErrNoManifestFound
@@ -273,7 +271,7 @@ func (idx *Index) updateManifest(manifest *Manifest) error {
 		return ErrManifestUnmarshall
 	}
 
-	topic := utils.HashString(manifest.Name)
+	topic := common.HashString(manifest.Name)
 	_, err = idx.feed.UpdateFeed(topic, idx.user, ref)
 	if err != nil {
 		return ErrManifestCreate
@@ -294,7 +292,7 @@ func (idx *Index) storeManifest(manifest *Manifest) error {
 		return ErrManifestUnmarshall
 	}
 
-	topic := utils.HashString(manifest.Name)
+	topic := common.HashString(manifest.Name)
 	_, err = idx.feed.CreateFeed(topic, idx.user, ref)
 	if err != nil {
 		return ErrManifestCreate
@@ -329,9 +327,9 @@ func longestCommonPrefix(str1, str2 string) (string, string, string) {
 	return str1[:matchLen], str1[matchLen:], str2[matchLen:]
 }
 
-func getRootManifestOfIndex(actualIndexName string, fd *feed.API, user utils.Address, client blockstore.Client) *Manifest {
+func getRootManifestOfIndex(actualIndexName string, fd *feed.API, user common.Address, client blockstore.Client) *Manifest {
 	var manifest Manifest
-	topic := utils.HashString(actualIndexName)
+	topic := common.HashString(actualIndexName)
 	_, addr, err := fd.GetFeedData(topic, user)
 	if err != nil {
 		return nil

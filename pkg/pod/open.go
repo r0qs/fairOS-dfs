@@ -21,13 +21,13 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	c "github.com/fairdatasociety/fairOS-dfs/pkg/collection"
 	d "github.com/fairdatasociety/fairOS-dfs/pkg/dir"
 	f "github.com/fairdatasociety/fairOS-dfs/pkg/file"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (p *Pod) OpenPod(podName, passPhrase string) (*Info, error) {
@@ -51,7 +51,7 @@ func (p *Pod) OpenPod(podName, passPhrase string) (*Info, error) {
 	var fd *feed.API
 	var dir *d.Directory
 	var dirInode *d.DirInode
-	var user utils.Address
+	var user common.Address
 	if sharedPodType {
 		addressString := p.getAddress(sharedPods, podName)
 		if addressString == "" {
@@ -59,7 +59,7 @@ func (p *Pod) OpenPod(podName, passPhrase string) (*Info, error) {
 		}
 
 		accountInfo = p.acc.GetEmptyAccountInfo()
-		address := utils.HexToAddress(addressString)
+		address := common.HexToAddress(addressString)
 		accountInfo.SetAddress(address)
 
 		fd = feed.New(accountInfo, p.client, p.logger)
@@ -67,7 +67,7 @@ func (p *Pod) OpenPod(podName, passPhrase string) (*Info, error) {
 		dir = d.NewDirectory(podName, p.client, fd, accountInfo, file, p.logger)
 
 		// get the pod's inode
-		_, dirInode, err = dir.GetDirNode(utils.PathSeperator+podName, fd, accountInfo)
+		_, dirInode, err = dir.GetDirNode(common.PathSeperator+podName, fd, accountInfo)
 		if err != nil {
 			return nil, err
 		}
@@ -95,7 +95,7 @@ func (p *Pod) OpenPod(podName, passPhrase string) (*Info, error) {
 		dir = d.NewDirectory(podName, p.client, fd, accountInfo, file, p.logger)
 
 		// get the pod's inode
-		_, dirInode, err = dir.GetDirNode(utils.PathSeperator+podName, fd, accountInfo)
+		_, dirInode, err = dir.GetDirNode(common.PathSeperator+podName, fd, accountInfo)
 		if err != nil {
 			return nil, err
 		}

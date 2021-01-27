@@ -25,9 +25,9 @@ import (
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore/bee/mock"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func TestPod_LoginPod(t *testing.T) {
@@ -76,13 +76,13 @@ func TestPod_LoginPod(t *testing.T) {
 			t.Fatalf("error creating pod %s", podName1)
 		}
 
-		//Make a dir
+		// Make a dir
 		err = pod1.MakeDir(podName1, firstDir)
 		if err != nil {
 			t.Fatalf("error creating directory %s", firstDir)
 		}
 
-		dirPath := utils.PathSeperator + podName1 + utils.PathSeperator + firstDir
+		dirPath := common.PathSeperator + podName1 + common.PathSeperator + firstDir
 		dirInode := info.GetDirectory().GetDirFromDirectoryMap(dirPath)
 		if dirInode == nil {
 			t.Fatalf("directory not created")
@@ -91,7 +91,7 @@ func TestPod_LoginPod(t *testing.T) {
 		// create a file
 		localFile, clean := createRandomFile(t, 540)
 		defer clean()
-		podDir := utils.PathSeperator + firstDir
+		podDir := common.PathSeperator + firstDir
 		fileName := filepath.Base(localFile)
 		fd, err := os.Open(localFile)
 		if err != nil {
@@ -102,7 +102,7 @@ func TestPod_LoginPod(t *testing.T) {
 		if err != nil {
 			t.Fatalf("upload failed: %s", err.Error())
 		}
-		if !info.getFile().IsFileAlreadyPResent(dirPath + utils.PathSeperator + filepath.Base(localFile)) {
+		if !info.getFile().IsFileAlreadyPResent(dirPath + common.PathSeperator + filepath.Base(localFile)) {
 			t.Fatalf("file not copied in pod")
 		}
 
@@ -132,7 +132,7 @@ func TestPod_LoginPod(t *testing.T) {
 		if dirInodeLogin.Meta.Name != firstDir {
 			t.Fatalf("dir not synced")
 		}
-		fileMeta := infoLogin.getFile().GetFromFileMap(dirPath + utils.PathSeperator + filepath.Base(localFile))
+		fileMeta := infoLogin.getFile().GetFromFileMap(dirPath + common.PathSeperator + filepath.Base(localFile))
 		if fileMeta == nil {
 			t.Fatalf("file not synced")
 		}
@@ -142,7 +142,6 @@ func TestPod_LoginPod(t *testing.T) {
 			t.Fatalf("could not delete pod")
 		}
 	})
-
 }
 
 func createRandomFile(t *testing.T, size int) (string, func()) {

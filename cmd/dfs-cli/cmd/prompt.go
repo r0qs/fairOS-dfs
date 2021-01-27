@@ -21,10 +21,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-
-	"github.com/fairdatasociety/fairOS-dfs/pkg/collection"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/pod"
-
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -34,12 +30,15 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/collection"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/pod"
+
 	"github.com/c-bata/go-prompt"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/api"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/dir"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/file"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/user"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 	"github.com/tinygrasshopper/bettercsv"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -673,7 +672,7 @@ func executor(in string) {
 			message := strings.ReplaceAll(string(data), "\n", "")
 			fmt.Println(message)
 			currentPod = podName
-			currentDirectory = utils.PathSeperator
+			currentDirectory = common.PathSeperator
 			currentPrompt = getCurrentPrompt()
 		case "del":
 			if len(blocks) < 3 {
@@ -740,7 +739,7 @@ func executor(in string) {
 			message := strings.ReplaceAll(string(data), "\n", "")
 			fmt.Println(message)
 			currentPod = podName
-			currentDirectory = utils.PathSeperator
+			currentDirectory = common.PathSeperator
 			currentPrompt = getCurrentPrompt()
 		case "close":
 			if !isPodOpened() {
@@ -1474,25 +1473,25 @@ func executor(in string) {
 		dirTocd := blocks[1]
 
 		// if cd'ing to previous dir, just do it
-		if dirTocd == ".." && currentDirectory != utils.PathSeperator {
+		if dirTocd == ".." && currentDirectory != common.PathSeperator {
 			currentDirectory = filepath.Dir(currentDirectory)
 			currentPrompt = getCurrentPrompt()
 			return
 		}
 
 		// if cd'ing to root dir, just do it
-		if dirTocd == utils.PathSeperator {
-			currentDirectory = utils.PathSeperator
+		if dirTocd == common.PathSeperator {
+			currentDirectory = common.PathSeperator
 			currentPrompt = getCurrentPrompt()
 			return
 		}
 
 		// if cd'ing forward, we have to check if that dir is present
-		if dirTocd != utils.PathSeperator {
-			if currentDirectory == utils.PathSeperator {
+		if dirTocd != common.PathSeperator {
+			if currentDirectory == common.PathSeperator {
 				dirTocd = currentDirectory + dirTocd
 			} else {
-				dirTocd = currentDirectory + utils.PathSeperator + dirTocd
+				dirTocd = currentDirectory + common.PathSeperator + dirTocd
 			}
 		}
 
@@ -1554,9 +1553,9 @@ func executor(in string) {
 			return
 		}
 
-		if !strings.HasPrefix(dirToMk, utils.PathSeperator) {
+		if !strings.HasPrefix(dirToMk, common.PathSeperator) {
 			// then this path is not from root
-			dirToMk = currentDirectory + utils.PathSeperator + dirToMk
+			dirToMk = currentDirectory + common.PathSeperator + dirToMk
 		}
 
 		args := make(map[string]string)
@@ -1583,12 +1582,12 @@ func executor(in string) {
 			fmt.Println("invalid dir")
 			return
 		}
-		if !strings.HasPrefix(dirToRm, utils.PathSeperator) {
+		if !strings.HasPrefix(dirToRm, common.PathSeperator) {
 			// then this path is not from root
-			if currentDirectory == utils.PathSeperator {
+			if currentDirectory == common.PathSeperator {
 				dirToRm = currentDirectory + dirToRm
 			} else {
-				dirToRm = currentDirectory + utils.PathSeperator + dirToRm
+				dirToRm = currentDirectory + common.PathSeperator + dirToRm
 			}
 		}
 
@@ -1664,7 +1663,7 @@ func executor(in string) {
 		}
 
 		// Create the file
-		loalFile := filepath.Join(localDir + utils.PathSeperator + filepath.Base(blocks[2]))
+		loalFile := filepath.Join(localDir + common.PathSeperator + filepath.Base(blocks[2]))
 		out, err := os.Create(loalFile)
 		if err != nil {
 			fmt.Println("download failed: ", err)
@@ -1673,11 +1672,11 @@ func executor(in string) {
 		defer out.Close()
 
 		podFile := blocks[2]
-		if !strings.HasPrefix(podFile, utils.PathSeperator) {
-			if currentDirectory == utils.PathSeperator {
+		if !strings.HasPrefix(podFile, common.PathSeperator) {
+			if currentDirectory == common.PathSeperator {
 				podFile = currentDirectory + podFile
 			} else {
-				podFile = currentDirectory + utils.PathSeperator + podFile
+				podFile = currentDirectory + common.PathSeperator + podFile
 			}
 		}
 		args := make(map[string]string)
@@ -1715,11 +1714,11 @@ func executor(in string) {
 		if statElement == "" {
 			return
 		}
-		if !strings.HasPrefix(statElement, utils.PathSeperator) {
-			if currentDirectory == utils.PathSeperator {
+		if !strings.HasPrefix(statElement, common.PathSeperator) {
+			if currentDirectory == common.PathSeperator {
 				statElement = currentDirectory + statElement
 			} else {
-				statElement = currentDirectory + utils.PathSeperator + statElement
+				statElement = currentDirectory + common.PathSeperator + statElement
 			}
 		}
 		args := make(map[string]string)
@@ -1830,11 +1829,11 @@ func executor(in string) {
 		if rmFile == "" {
 			return
 		}
-		if !strings.HasPrefix(rmFile, utils.PathSeperator) {
-			if currentDirectory == utils.PathSeperator {
+		if !strings.HasPrefix(rmFile, common.PathSeperator) {
+			if currentDirectory == common.PathSeperator {
 				rmFile = currentDirectory + rmFile
 			} else {
-				rmFile = currentDirectory + utils.PathSeperator + rmFile
+				rmFile = currentDirectory + common.PathSeperator + rmFile
 			}
 		}
 
@@ -1858,11 +1857,11 @@ func executor(in string) {
 		if podFile == "" {
 			return
 		}
-		if !strings.HasPrefix(podFile, utils.PathSeperator) {
-			if currentDirectory == utils.PathSeperator {
+		if !strings.HasPrefix(podFile, common.PathSeperator) {
+			if currentDirectory == common.PathSeperator {
 				podFile = currentDirectory + podFile
 			} else {
-				podFile = currentDirectory + utils.PathSeperator + podFile
+				podFile = currentDirectory + common.PathSeperator + podFile
 			}
 		}
 
@@ -2016,7 +2015,6 @@ func help() {
 	fmt.Println(" - stat <file name or directory name> - shows the information about a file or directory")
 	fmt.Println(" - help - display this help")
 	fmt.Println(" - exit - exits from the prompt")
-
 }
 
 func getCurrentPrompt() string {

@@ -18,19 +18,19 @@ package user
 
 import (
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
-func (u *Users) uploadEncryptedMnemonic(userName string, address utils.Address, encryptedMnemonic string, fd *feed.API) error {
-	topic := utils.HashString(userName)
+func (u *Users) uploadEncryptedMnemonic(userName string, address common.Address, encryptedMnemonic string, fd *feed.API) error {
+	topic := common.HashString(userName)
 	data := []byte(encryptedMnemonic)
 	_, err := fd.CreateFeed(topic, address, data)
 	return err
 }
 
-func (u *Users) getEncryptedMnemonic(userName string, address utils.Address, fd *feed.API) (string, error) {
-	topic := utils.HashString(userName)
+func (u *Users) getEncryptedMnemonic(userName string, address common.Address, fd *feed.API) (string, error) {
+	topic := common.HashString(userName)
 	_, data, err := fd.GetFeedData(topic, address)
 	if err != nil {
 		return "", err
@@ -38,8 +38,8 @@ func (u *Users) getEncryptedMnemonic(userName string, address utils.Address, fd 
 	return string(data), nil
 }
 
-func (u *Users) deleteMnemonic(userName string, address utils.Address, fd *feed.API, client blockstore.Client) error {
-	topic := utils.HashString(userName)
+func (u *Users) deleteMnemonic(userName string, address common.Address, fd *feed.API, client blockstore.Client) error {
+	topic := common.HashString(userName)
 	feedAddress, _, err := fd.GetFeedData(topic, address)
 	if err != nil {
 		return err

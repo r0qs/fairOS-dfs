@@ -20,12 +20,12 @@ import (
 	"encoding/json"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/account"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/feed"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (d *Directory) GetDirNode(name string, fd *feed.API, accountInfo *account.Info) ([]byte, *DirInode, error) {
-	topic := utils.HashString(name)
+	topic := common.HashString(name)
 	addr, data, err := fd.GetFeedData(topic, accountInfo.GetAddress())
 	if err != nil {
 		return nil, nil, err

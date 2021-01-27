@@ -20,19 +20,19 @@ import (
 	"hash"
 	"unsafe"
 
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 )
 
 // Feed represents a particular user's stream of updates on a topic
 type Feed struct {
-	Topic Topic         `json:"topic"`
-	User  utils.Address `json:"user"`
+	Topic Topic          `json:"topic"`
+	User  common.Address `json:"user"`
 }
 
 // Feed layout:
 // TopicLength bytes
 // userAddr common.AddressLength bytes
-const feedLength = TopicLength + utils.AddressLength
+const feedLength = TopicLength + common.AddressLength
 
 // mapKey calculates a unique id for this feed. Used by the cache map in `Handler`
 func (f *Feed) mapKey() (uint64, error) {
@@ -61,6 +61,6 @@ func (f *Feed) binaryPut(serializedData []byte) error {
 	copy(serializedData[cursor:cursor+TopicLength], f.Topic[:TopicLength])
 	cursor += TopicLength
 
-	copy(serializedData[cursor:cursor+utils.AddressLength], f.User[:])
+	copy(serializedData[cursor:cursor+common.AddressLength], f.User[:])
 	return nil
 }

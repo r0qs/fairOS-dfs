@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	m "github.com/fairdatasociety/fairOS-dfs/pkg/meta"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (f *File) GetFileReference(podFile string) ([]byte, string, error) {
@@ -35,7 +35,7 @@ func (f *File) GetFileReference(podFile string) ([]byte, string, error) {
 }
 
 func (f *File) AddFileToPath(filePath, metaHexRef string) error {
-	metaReferenace, err := utils.ParseHexReference(metaHexRef)
+	metaReferenace, err := common.ParseHexReference(metaHexRef)
 	if err != nil {
 		return err
 	}

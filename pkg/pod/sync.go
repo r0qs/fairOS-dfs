@@ -23,10 +23,10 @@ import (
 	"sync"
 
 	"github.com/fairdatasociety/fairOS-dfs/pkg/blockstore"
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	d "github.com/fairdatasociety/fairOS-dfs/pkg/dir"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/logging"
 	m "github.com/fairdatasociety/fairOS-dfs/pkg/meta"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (p *Pod) SyncPod(podName string) error {
@@ -79,7 +79,7 @@ func (pi *Info) SyncPod(podName string, client blockstore.Client, logger logging
 					return
 				}
 
-				path := meta.Path + utils.PathSeperator + meta.Name
+				path := meta.Path + common.PathSeperator + meta.Name
 				meta.MetaReference = reference
 				pi.file.AddToFileMap(path, meta)
 				path = strings.TrimPrefix(path, podName)
@@ -94,7 +94,7 @@ func (pi *Info) SyncPod(podName string, client blockstore.Client, logger logging
 				return
 			}
 
-			path := dirInode.Meta.Path + utils.PathSeperator + dirInode.Meta.Name
+			path := dirInode.Meta.Path + common.PathSeperator + dirInode.Meta.Name
 			err = pi.GetDirectory().LoadDirMeta(podName, dirInode, fd, accountInfo)
 			if err != nil {
 				logger.Warningf("sync: load meta error: %w", err)

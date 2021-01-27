@@ -17,8 +17,8 @@ limitations under the License.
 package dfs
 
 import (
+	"github.com/fairdatasociety/fairOS-dfs/pkg/common"
 	"github.com/fairdatasociety/fairOS-dfs/pkg/pod"
-	"github.com/fairdatasociety/fairOS-dfs/pkg/utils"
 )
 
 func (d *DfsAPI) CreatePod(podName, passPhrase, sessionId string) (*pod.Info, error) {
@@ -181,7 +181,7 @@ func (d *DfsAPI) PodShare(podName, passPhrase, sessionId string) (string, error)
 	return address, nil
 }
 
-func (d *DfsAPI) PodReceiveInfo(sessionId string, ref utils.Reference) (*pod.ShareInfo, error) {
+func (d *DfsAPI) PodReceiveInfo(sessionId string, ref common.Reference) (*pod.ShareInfo, error) {
 	// get the logged in user information
 	ui := d.users.GetLoggedInUserInfo(sessionId)
 	if ui == nil {
@@ -191,7 +191,7 @@ func (d *DfsAPI) PodReceiveInfo(sessionId string, ref utils.Reference) (*pod.Sha
 	return ui.GetPod().ReceivePodInfo(ref)
 }
 
-func (d *DfsAPI) PodReceive(sessionId string, ref utils.Reference) (*pod.Info, error) {
+func (d *DfsAPI) PodReceive(sessionId string, ref common.Reference) (*pod.Info, error) {
 	// get the logged in user information
 	ui := d.users.GetLoggedInUserInfo(sessionId)
 	if ui == nil {
